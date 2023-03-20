@@ -4,9 +4,24 @@ from datetime import datetime, timezone
 import time
 import mysql.connector
 
-# Set the range for the random values
-moisture_range = (10, 50)
-temperature_range = (0, 35)
+
+# Define the mean and standard deviation of the normal distribution
+mean = 25 # mean temperature in Celsius
+stddev = 5 # standard deviation in Celsius
+
+# Generate a random temperature value using the normal distribution
+temperature_range = random.normalvariate(mean, stddev)
+
+# Define the alpha and beta parameters of the beta distribution
+alpha = 2
+beta = 5
+
+# Generate a random moisture value using the beta distribution
+#moisture_range = random.betavariate(alpha, beta) * 100
+moisture_min = 20.0
+moisture_max = 100.0
+moisture_value = random.betavariate(alpha, beta) * (moisture_max - moisture_min) + moisture_min
+
 
 # Connect to the MySQL database
 cnx = mysql.connector.connect(user='', password='',
@@ -29,8 +44,8 @@ while True:
     sensor_data = {
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "sensor_id": "soil_sensor_001",
-        "soil_moisture": round(random.uniform(*moisture_range), 2),
-        "soil_temperature": round(random.uniform(*temperature_range), 2)
+        "soil_moisture": round(moisture_value, 2),
+        "soil_temperature": round(temperature_range, 2)
     }
 
     # Insert the data into the MySQL database
