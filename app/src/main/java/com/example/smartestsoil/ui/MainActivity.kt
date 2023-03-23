@@ -22,6 +22,7 @@ import androidx.navigation.compose.rememberNavController
 
 import com.example.smartestsoil.ui.navigation.BottomNav
 import com.example.smartestsoil.ui.navigation.NavContro
+import com.example.smartestsoil.ui.navigation.TopBar
 import com.example.smartestsoil.ui.theme.SmartestSoilTheme
 
 class MainActivity : ComponentActivity() {
@@ -46,7 +47,7 @@ fun MainScreen() {
     val navContoller = rememberNavController( )
 
     Scaffold (
-        topBar = { TopAppBar() { Text(text = "Smartest Soil") }},
+        topBar = { TopBar(navContoller) },
         content = { NavContro(navController = navContoller) },
         bottomBar = { BottomNav( navContoller) }
     )

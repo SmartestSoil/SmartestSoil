@@ -5,9 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.smartestsoil.ui.screens.Details
-import com.example.smartestsoil.ui.screens.Home
-import com.example.smartestsoil.ui.screens.Locations
+import com.example.smartestsoil.ui.screens.*
 
 @Composable
 fun NavContro(navController: NavHostController) {
@@ -22,6 +20,20 @@ fun NavContro(navController: NavHostController) {
         }
         composable(route = "Details"){
             Details()
+        }
+
+        composable(route = "Info"){
+            Info()
+        }
+        composable(route = "Account"){
+            Account()
+        }
+        composable(route = "Login"){
+            //Login()
+        }
+        composable(route = "SignUp"){
+            //SignUp()
+
         }
 
     }
