@@ -1,5 +1,6 @@
 package com.example.smartestsoil.ui.navigation
 
+import androidx.compose.foundation.Image
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -14,11 +15,12 @@ import com.example.smartestsoil.model.TabItem
 @Composable
 fun TopBar(navController: NavController) {
     var expanded by remember { mutableStateOf(false) }
+
     TopAppBar(
-        title = { Text("SmartSoil")},
+        title = { Text("")},
         navigationIcon = {
             IconButton(onClick = {navController.navigate("Info") }) {
-                Icon(Icons.Filled.Menu, contentDescription =  null)
+                Image(painter = painterResource(R.drawable.logo_110x110), contentDescription =  null)
             }
         },
         actions = {
