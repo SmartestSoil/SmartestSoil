@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1054274736040",
+    "project_id": "smartestsoil",
+    "storage_bucket": "smartestsoil.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1054274736040:android:ee7a2eea694b481518d79d",
+        "android_client_info": {
+          "package_name": "com.example.smartestsoil"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1054274736040-tlm5vqf4fqshvodk77udsurrvb54mtvk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD100YLHl1Q-gs_LznTLz5SzFOsp9Y5T6g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1054274736040-tlm5vqf4fqshvodk77udsurrvb54mtvk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

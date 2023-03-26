@@ -1,33 +1,29 @@
 package com.example.smartestsoil.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
-
 import com.example.smartestsoil.ui.navigation.BottomNav
-import com.example.smartestsoil.ui.navigation.NavContro
+import com.example.smartestsoil.ui.navigation.NavController
+import com.example.smartestsoil.ui.navigation.TopBar
 import com.example.smartestsoil.ui.theme.SmartestSoilTheme
+import com.example.smartestsoil.viewModel.FirebaseAuthViewModel
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            //val firebaseAuthViewModel = viewModel(modelClass = FirebaseAuthViewModel::class.java)
             SmartestSoilTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -35,20 +31,40 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
                     MainScreen()
+                    // With this you can access the Authentication
+                    //Authentication()
                 }
             }
         }
     }
 }
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainScreen() {
-    val navContoller = rememberNavController( )
+    val navController = rememberNavController()
 
-    Scaffold (
-        topBar = { TopAppBar() { Text(text = "Smartest Soil") }},
-        content = { NavContro(navController = navContoller) },
-        bottomBar = { BottomNav( navContoller) }
+    val firebaseAuthViewModel: FirebaseAuthViewModel = viewModel()
+
+    // Here checking if there is a user logged in or not and based on that showing the topBar and bottomBar or not
+    if (Firebase.auth.currentUser == null) {
+        firebaseAuthViewModel.startDestination.value = "Authentication"
+    } else {
+        firebaseAuthViewModel.startDestination.value = "Home"
+    }
+
+    Scaffold(
+        topBar = {
+            if (firebaseAuthViewModel.startDestination.value != "Authentication") {
+                TopBar(navController)
+            }
+        },
+        content = { NavController(navController = navController, startDestination = firebaseAuthViewModel.startDestination.value) },
+        bottomBar = {
+            if (firebaseAuthViewModel.startDestination.value != "Authentication") {
+                BottomNav(navController)
+            }
+        }
     )
 }
 

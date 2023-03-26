@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">SmartestSoil</string>
+    <string name="password_requirement_characters">At least 8 characters</string>
+    <string name="password_requirement_capital">At least 1 upper-case letter</string>
+    <string name="password_requirement_digit">At least 1 digit</string>
+    <string name="label_sign_in">Sign In</string>
+    <string name="label_sign_up">Sign Up</string>
+    <string name="label_email">Email Address</string>
+    <string name="label_password">Password</string>
+    <string name="hide_password">Hide password</string>
+    <string name="show_password">Show password</string>
+    <string name="password_requirement_satisfied">%s, satisfied</string>
+    <string name="password_requirement_not_satisfied">%s, needed</string>
+    <string name="action_sign_up">Sign Up</string>
+    <string name="action_sign_in">Sign In</string>
+    <string name="action_no_account">Don\'t have an account?</string>
+    <string name="action_already_have_account">Already have an account?</string>
+    <string name="error_title">Error</string>
+    <string name="error_action">OK</string>
 </resources>
