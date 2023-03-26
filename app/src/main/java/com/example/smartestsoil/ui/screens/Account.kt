@@ -1,11 +1,10 @@
 package com.example.smartestsoil.ui.screens
 
-import android.icu.text.IDNA.Info
+import android.accounts.Account
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 
 @Composable
-fun Info() {
-    Text("this is the info page")
-
+fun Account() {
+    Text("this is the account page")
 }

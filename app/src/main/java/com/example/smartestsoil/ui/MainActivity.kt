@@ -23,7 +23,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            //val firebaseAuthViewModel = viewModel(modelClass = FirebaseAuthViewModel::class.java)
             SmartestSoilTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
