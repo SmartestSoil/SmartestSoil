@@ -7,9 +7,9 @@ const PORT = process.env.PORT || 3000;
 // Create a connection pool to the MySQL database
 const pool = mysql.createPool({
   host: 'localhost',
-  user: '',
-  password: '',
-  database: 'sensordata'
+  user: 'group-01',
+  password: 'spring2023',
+  database: 'MDP2023'
 });
 
 // Create a GET endpoint to retrieve data from the database
@@ -34,11 +34,11 @@ app.get('/api/data', (req, res) => {
       }
 
       // Send the results as a JSON response
-      res.json(results);
-    });
+      res
+      .json(results);
+    }); 
   });
 });
-
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);

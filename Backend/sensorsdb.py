@@ -3,7 +3,11 @@ import random
 from datetime import datetime, timezone
 import time
 import mysql.connector
-
+import busio
+import digitalio
+import board
+import adafruit_mcp3xxx.mcp3008 as MCP
+from adafruit_mcp3xxx.analog_in import AnalogIn
 
 # Define the mean and standard deviation of the normal distribution
 mean = 25 # mean temperature in Celsius
@@ -12,23 +16,30 @@ stddev = 5 # standard deviation in Celsius
 # Generate a random temperature value using the normal distribution
 temperature_range = random.normalvariate(mean, stddev)
 
-# Define the alpha and beta parameters of the beta distribution
-alpha = 2
-beta = 5
+# Calibration values
+moisture_min = 0   # minimum moisture value
+moisture_max = 100 # maximum moisture value
+adc_min = 0        # minimum ADC value
+adc_max = 65535    # maximum ADC value
 
-# Generate a random moisture value using the beta distribution
-#moisture_range = random.betavariate(alpha, beta) * 100
-moisture_min = 20.0
-moisture_max = 100.0
-moisture_value = random.betavariate(alpha, beta) * (moisture_max - moisture_min) + moisture_min
+# create the spi bus
+spi = busio.SPI(clock=board.SCK, MISO=board.MISO, MOSI=board.MOSI)
 
+# create the cs (chip select)
+cs = digitalio.DigitalInOut(board.CE0)
+
+# create the mcp object
+mcp = MCP.MCP3008(spi, cs)
+
+# create an analog input channel on pin 0
+chan = AnalogIn(mcp, MCP.P0)
 
 # Connect to the MySQL database
-cnx = mysql.connector.connect(user='', password='',
-                              host='', database='')
+cnx = mysql.connector.connect(user='group-01', password='spring2023',
+                              host='localhost', database='MDP2023')
 cursor = cnx.cursor()
 
-# Create the table to store the sensor data
+# Create the table to store the sensor data1
 create_table = '''CREATE TABLE IF NOT EXISTS sensor_data (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     timestamp DATETIME,
@@ -40,9 +51,19 @@ cursor.execute(create_table)
 
 # Create a loop that runs every 1 minute
 while True:
+    # Generate a random temperature value using the normal distribution
+    temperature_range = random.normalvariate(mean, stddev)
+
+    # read the raw ADC value
+    adc_value = chan.value
+
+    # convert the ADC value to a moisture percentage
+    #moisture_value = (adc_value - adc_min) * (moisture_max - moisture_min) / (adc_max - adc_min) + moisture_min
+    moisture_value = ((adc_max - adc_value) - adc_min) * (moisture_max - moisture_min) / (adc_max - adc_min) + moisture_min
+
     # Create a dictionary to store the sensor data
     sensor_data = {
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S'),
         "sensor_id": "soil_sensor_001",
         "soil_moisture": round(moisture_value, 2),
         "soil_temperature": round(temperature_range, 2)
@@ -68,6 +89,4 @@ while True:
     # Wait for 1 min before generating the next data point
     time.sleep(60)  # 1 min in seconds
 
-# Close the MySQL database connection when done
-cursor.close()
-cnx.close()
+# Close
