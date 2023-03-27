@@ -3,7 +3,6 @@ package com.example.smartestsoil.model
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
-import java.sql.Date
 
 
 const val BASE_URL = "http://smartestsoil.duckdns.org:3000/"
