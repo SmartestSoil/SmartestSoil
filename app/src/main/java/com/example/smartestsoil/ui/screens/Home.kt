@@ -54,7 +54,7 @@ fun Home(sensorViewModel: SensorViewModel = viewModel()) {
 @Composable
 fun SensorList(sensordata: List<SensorData>) {
     val moistureValue = sensordata.lastOrNull()?.soil_moisture ?: "N/A"
-
+/*It would be good to create a val that saves the last displayed value to be shown instead N/A till the data synch*/
     Box(
         modifier = Modifier
             .fillMaxSize()
