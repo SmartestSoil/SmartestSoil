@@ -10,6 +10,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,8 +55,14 @@ fun Home(sensorViewModel: SensorViewModel = viewModel()) {
 }
 @Composable
 fun SensorList(sensordata: List<SensorData>) {
-    val moistureValue = sensordata.lastOrNull()?.soil_moisture ?: "N/A"
-/*It would be good to create a val that saves the last displayed value to be shown instead N/A till the data synch*/
+    val lastStoredMoistureValue = rememberSaveable { mutableStateOf("N/A") }
+    val moistureValue = sensordata.lastOrNull()?.soil_moisture ?: lastStoredMoistureValue.value
+
+    // Update the stored value when a new value is fetched
+    if (moistureValue != "N/A") {
+        lastStoredMoistureValue.value = moistureValue.toString()
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
