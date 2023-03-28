@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -14,6 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.smartestsoil.ui.navigation.BottomNav
 import com.example.smartestsoil.ui.navigation.NavGraph
 import com.example.smartestsoil.ui.navigation.TopBar
+import com.example.smartestsoil.ui.screens.authentication.Authentication
 import com.example.smartestsoil.ui.theme.SmartestSoilTheme
 import com.example.smartestsoil.viewModel.FirebaseAuthViewModel
 import com.google.firebase.auth.ktx.auth
@@ -43,33 +45,13 @@ class MainActivity : ComponentActivity() {
 fun MainScreen() {
     val navController = rememberNavController()
 
-
-
-
-    //val firebaseAuthViewModel: FirebaseAuthViewModel = viewModel()
-
-    // Here checking if there is a user logged in or not and based on that showing the topBar and bottomBar or not
-    if (Firebase.auth.currentUser == null) {
-        //firebaseAuthViewModel.startDestination.value = "authentication"
-
-    } else {
-        //firebaseAuthViewModel.startDestination.value = "home"
-    }
-
     Scaffold(
-
-        topBar = {
-           /* if (firebaseAuthViewModel.startDestination.value != "Authentication") {*/
-                TopBar(navController)
-           // }
-        },
-        content = { NavGraph(navController =navController ) /*startDestination = firebaseAuthViewModel.startDestination.value*/ },
-        bottomBar = {
-            /*if (firebaseAuthViewModel.startDestination.value != "Authentication") {*/
-                BottomNav(navController)
-           // }
-        }
+        topBar = { TopBar(navController) },
+        content = { NavGraph(navController =navController ) },
+        bottomBar = { BottomNav(navController) }
     )
+
+
 }
 
 @Preview(showBackground = true)

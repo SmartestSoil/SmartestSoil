@@ -15,13 +15,15 @@ import com.example.smartestsoil.model.TabItem
 fun BottomNav(navController: NavController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+
     if (currentRoute == null || currentRoute == NavRoute.Authentication.path) {
         return
     }
+
     val items = listOf(
-        TabItem("Home", Icons.Filled.Home,"Home"),
-        TabItem("Soil", Icons.Filled.LocationOn,"Locations"),
-        TabItem("Detail", Icons.Filled.LocationOn,"Details"),
+        TabItem("Home", Icons.Filled.Home,"home"),
+        TabItem("Soil", Icons.Filled.LocationOn,"locations"),
+        TabItem("Detail", Icons.Filled.LocationOn,"detail"),
     )
     var selectedItem by remember { mutableStateOf(0) }
     BottomNavigation() {
@@ -30,6 +32,7 @@ fun BottomNav(navController: NavController) {
                 selected = selectedItem== index,
                 onClick = {
                     selectedItem =index
+
                     navController.navigate(item.route)
                 },
                 icon = {Icon(item.icon, contentDescription = null)},

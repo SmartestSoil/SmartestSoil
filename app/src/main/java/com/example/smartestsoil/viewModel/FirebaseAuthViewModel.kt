@@ -12,7 +12,6 @@ import com.example.smartestsoil.model.AuthenticationMode
 import com.example.smartestsoil.model.PasswordRequirements
 import com.example.smartestsoil.ui.navigation.NavGraph
 import com.example.smartestsoil.ui.navigation.NavRoute
-import com.example.smartestsoil.ui.navigation.popUpToHome
 import com.example.smartestsoil.ui.screens.authentication.Authentication
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -113,7 +112,6 @@ class FirebaseAuthViewModel: ViewModel() {
                         error = null
 
                     )
-
                     // Here I tried to update the startDestination to be Home and then the
 
 
