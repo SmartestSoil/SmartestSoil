@@ -9,6 +9,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.smartestsoil.R
 import com.example.smartestsoil.model.TabItem
@@ -26,7 +27,7 @@ fun TopBar(navController: NavController) {
     TopAppBar(
         title = { Text("")},
         navigationIcon = {
-            IconButton(onClick = {navController.navigate("Info") }) {
+            IconButton(onClick = {navController.navigate("info") }) {
                 Image(painter = painterResource(R.drawable.logo_110x110), contentDescription =  null)
             }
         },
@@ -40,17 +41,17 @@ fun TopBar(navController: NavController) {
                 expanded = expanded,
                 onDismissRequest = { expanded=false }) {
                 DropdownMenuItem(
-                    onClick = {navController.navigate("Info") },
+                    onClick = {navController.navigate("info")},
 
                     ) {
                     Icon(Icons.Filled.Info,  contentDescription = null)
                 }
-                DropdownMenuItem(onClick = { navController.navigate("Account") }) {
+                DropdownMenuItem(onClick = { navController.navigate("account") }) {
                     Icon(Icons.Filled.AccountBox, contentDescription = null)
 
                 }
                 DropdownMenuItem(
-                    onClick = {navController.navigate("Logout") },
+                    onClick = {navController.navigate("logout") },
 
                     ) {
                     Icon(Icons.Filled.Logout,  contentDescription = null)

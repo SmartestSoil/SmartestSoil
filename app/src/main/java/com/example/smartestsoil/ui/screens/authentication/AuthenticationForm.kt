@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.smartestsoil.model.AuthenticationMode
 import com.example.smartestsoil.model.PasswordRequirements
 
@@ -22,7 +23,8 @@ fun AuthenticationForm(
     onEmailChanged: (email: String) -> Unit,
     onPasswordChanged: (password: String) -> Unit,
     onAuthenticate: () -> Unit,
-    onToggleMode: () -> Unit
+    onToggleMode: () -> Unit,
+    navController: NavHostController
 ) {
     Column(
         modifier = modifier,
@@ -69,7 +71,8 @@ fun AuthenticationForm(
             AuthenticationButton(
                 enableAuthentication = enableAuthentication,
                 authenticationMode = authenticationMode,
-                onAuthenticate = onAuthenticate
+                onAuthenticate = onAuthenticate,
+                navController = navController
             )
             Spacer(modifier = Modifier.weight(1f))
             ToggleAuthenticationMode(
