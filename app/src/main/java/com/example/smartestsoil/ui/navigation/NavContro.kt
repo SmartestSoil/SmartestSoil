@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.smartestsoil.ui.screens.*
 
-@Composable
+/*@Composable
 fun NavContro(navController: NavHostController) {
     NavHost(
         navController = navController,
@@ -37,4 +37,4 @@ fun NavContro(navController: NavHostController) {
         }
 
     }
-}
+}*/

@@ -11,7 +11,7 @@ import com.example.smartestsoil.viewModel.FirebaseAuthViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
-@Composable
+/*@Composable
 fun NavController(navController: NavHostController, startDestination: String) {
     NavHost(
         navController = navController,
@@ -29,4 +29,4 @@ fun NavController(navController: NavHostController, startDestination: String) {
             Details()
         }
     }
-}
+}*/

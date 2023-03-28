@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.smartestsoil.ui.screens.authentication.AuthenticationButton
 import com.example.smartestsoil.viewModel.FirebaseAuthViewModel
+import com.google.api.Context
 
 @Composable
 fun Home() {
