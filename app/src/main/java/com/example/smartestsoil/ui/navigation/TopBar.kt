@@ -9,11 +9,18 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.smartestsoil.R
 import com.example.smartestsoil.model.TabItem
 
 @Composable
 fun TopBar(navController: NavController) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    if (currentRoute == null || currentRoute == NavRoute.Authentication.path) {
+        return
+    }
     var expanded by remember { mutableStateOf(false) }
 
     TopAppBar(
@@ -41,6 +48,12 @@ fun TopBar(navController: NavController) {
                 DropdownMenuItem(onClick = { navController.navigate("Account") }) {
                     Icon(Icons.Filled.AccountBox, contentDescription = null)
 
+                }
+                DropdownMenuItem(
+                    onClick = {navController.navigate("Logout") },
+
+                    ) {
+                    Icon(Icons.Filled.Logout,  contentDescription = null)
                 }
 
             }

@@ -12,7 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.smartestsoil.ui.navigation.BottomNav
-import com.example.smartestsoil.ui.navigation.NavController
+import com.example.smartestsoil.ui.navigation.NavGraph
 import com.example.smartestsoil.ui.navigation.TopBar
 import com.example.smartestsoil.ui.theme.SmartestSoilTheme
 import com.example.smartestsoil.viewModel.FirebaseAuthViewModel
@@ -43,26 +43,31 @@ class MainActivity : ComponentActivity() {
 fun MainScreen() {
     val navController = rememberNavController()
 
-    val firebaseAuthViewModel: FirebaseAuthViewModel = viewModel()
+
+
+
+    //val firebaseAuthViewModel: FirebaseAuthViewModel = viewModel()
 
     // Here checking if there is a user logged in or not and based on that showing the topBar and bottomBar or not
     if (Firebase.auth.currentUser == null) {
-        firebaseAuthViewModel.startDestination.value = "Authentication"
+        //firebaseAuthViewModel.startDestination.value = "authentication"
+
     } else {
-        firebaseAuthViewModel.startDestination.value = "Home"
+        //firebaseAuthViewModel.startDestination.value = "home"
     }
 
     Scaffold(
+
         topBar = {
-            if (firebaseAuthViewModel.startDestination.value != "Authentication") {
+           /* if (firebaseAuthViewModel.startDestination.value != "Authentication") {*/
                 TopBar(navController)
-            }
+           // }
         },
-        content = { NavController(navController = navController, startDestination = firebaseAuthViewModel.startDestination.value) },
+        content = { NavGraph(navController =navController ) /*startDestination = firebaseAuthViewModel.startDestination.value*/ },
         bottomBar = {
-            if (firebaseAuthViewModel.startDestination.value != "Authentication") {
+            /*if (firebaseAuthViewModel.startDestination.value != "Authentication") {*/
                 BottomNav(navController)
-            }
+           // }
         }
     )
 }
