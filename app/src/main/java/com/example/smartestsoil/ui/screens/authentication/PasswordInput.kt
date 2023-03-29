@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -37,9 +38,7 @@ fun PasswordInput(
         value = password,
         singleLine = true,
         shape = RoundedCornerShape(1.dp),
-        onValueChange = {
-            onPasswordChanged(it)
-        },
+        onValueChange = { onPasswordChanged(it) },
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Lock,
@@ -60,12 +59,10 @@ fun PasswordInput(
                 imageVector = if (isPasswordHidden) {
                     Icons.Default.Visibility
                 } else Icons.Default.VisibilityOff,
-                contentDescription = null
+                contentDescription = null,
             )
         },
-        label = {
-            Text(text = stringResource(id = R.string.label_password))
-        },
+        label = { Text(text = stringResource(id = R.string.label_password)) },
         keyboardOptions = KeyboardOptions(
             imeAction = ImeAction.Done,
             keyboardType = KeyboardType.Password

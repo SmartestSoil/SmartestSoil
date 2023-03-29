@@ -1,13 +1,16 @@
 package com.example.smartestsoil.ui.screens.authentication
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.example.smartestsoil.R
 import com.example.smartestsoil.model.AuthenticationMode
 import com.example.smartestsoil.model.PasswordRequirements
 
@@ -26,21 +29,30 @@ fun AuthenticationForm(
 ) {
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(32.dp))
-        AuthenticationTitle(
-            modifier = Modifier.fillMaxWidth(),
-            authenticationMode = authenticationMode
-        )
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(80.dp))
+        Image(
+            modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
+            painter = painterResource(id = R.drawable.logo),
+            contentDescription = "Logo",
+            )
+        Spacer(modifier = Modifier.height(60.dp))
         val passwordFocusRequester = FocusRequester()
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(15.dp),
         ) {
+            AuthenticationTitle(
+                modifier = Modifier.fillMaxWidth(),
+                authenticationMode = authenticationMode
+            )
+            ToggleAuthenticationMode(
+                modifier = Modifier.fillMaxWidth(),
+                authenticationMode = authenticationMode,
+                toggleAuthentication = { onToggleMode() }
+            )
+            Spacer(modifier = Modifier.height(10.dp))
             EmailInput(
                 modifier = Modifier.fillMaxWidth(),
                 email = email,
@@ -62,23 +74,16 @@ fun AuthenticationForm(
                 visible = authenticationMode ==
                         AuthenticationMode.SIGN_UP
             ) {
-                //PasswordRequirements(completedPasswordRequirements)
                 PasswordRequirements(satisfiedRequirements = completedPasswordRequirements)
             }
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(30.dp))
             AuthenticationButton(
+                modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
                 enableAuthentication = enableAuthentication,
                 authenticationMode = authenticationMode,
                 onAuthenticate = onAuthenticate
             )
             Spacer(modifier = Modifier.weight(1f))
-            ToggleAuthenticationMode(
-                modifier = Modifier.fillMaxWidth(),
-                authenticationMode = authenticationMode,
-                toggleAuthentication = {
-                    onToggleMode()
-                }
-            )
         }
     }
 }

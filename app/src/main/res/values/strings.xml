@@ -13,8 +13,8 @@
     <string name="password_requirement_not_satisfied">%s, needed</string>
     <string name="action_sign_up">Sign Up</string>
     <string name="action_sign_in">Sign In</string>
-    <string name="action_no_account">Don\'t have an account?</string>
-    <string name="action_already_have_account">Already have an account?</string>
+    <string name="action_no_account">Don\'t have an account?\u0020</string>
+    <string name="action_already_have_account">Already have an account?\u0020</string>
     <string name="error_title">Error</string>
     <string name="error_action">OK</string>
 </resources>

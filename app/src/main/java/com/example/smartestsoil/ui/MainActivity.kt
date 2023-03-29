@@ -14,6 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.smartestsoil.ui.navigation.BottomNav
 import com.example.smartestsoil.ui.navigation.NavController
 import com.example.smartestsoil.ui.navigation.TopBar
+import com.example.smartestsoil.ui.screens.authentication.Authentication
 import com.example.smartestsoil.ui.theme.SmartestSoilTheme
 import com.example.smartestsoil.viewModel.FirebaseAuthViewModel
 import com.google.firebase.auth.ktx.auth
@@ -29,9 +30,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    MainScreen()
+                    //MainScreen()
                     // With this you can access the Authentication
-                    //Authentication()
+                    Authentication()
                 }
             }
         }
