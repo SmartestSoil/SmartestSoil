@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.sp
 import com.example.smartestsoil.R
 import com.example.smartestsoil.model.AuthenticationMode
 import com.example.smartestsoil.ui.theme.SmartestSoilTheme
+import com.example.smartestsoil.ui.theme.Typography
 
 @Composable
 fun AuthenticationTitle(
@@ -29,7 +30,6 @@ fun AuthenticationTitle(
                 R.string.label_sign_up
             }
         ),
-        color = MaterialTheme.colors.onPrimary,
         fontSize = 30.sp,
         modifier = Modifier.padding(horizontal = Dp(7F))
     )

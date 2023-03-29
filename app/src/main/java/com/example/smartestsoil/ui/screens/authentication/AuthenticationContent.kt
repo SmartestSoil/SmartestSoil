@@ -44,7 +44,8 @@ fun AuthenticationContent(
                 onToggleMode = {
                     handleEvent(
                         AuthEvent.ToggleAuthenticationMode)
-                }
+                },
+                authenticationState = authenticationState
             )
             authenticationState.error?.let { error ->
                 AuthenticationErrorDialog(

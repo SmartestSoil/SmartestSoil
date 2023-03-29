@@ -2,19 +2,31 @@ package com.example.smartestsoil.ui.screens.authentication
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.smartestsoil.R
 import androidx.navigation.NavHostController
+import com.example.smartestsoil.model.AuthState
 import com.example.smartestsoil.model.AuthenticationMode
 import com.example.smartestsoil.model.PasswordRequirements
+import com.example.smartestsoil.viewModel.FirebaseAuthViewModel
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AuthenticationForm(
     modifier: Modifier = Modifier,
@@ -27,18 +39,25 @@ fun AuthenticationForm(
     onPasswordChanged: (password: String) -> Unit,
     onAuthenticate: () -> Unit,
     onToggleMode: () -> Unit,
-    navController: NavHostController
+    navController: NavHostController,
+    authenticationState: AuthState,
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val scrollState = rememberScrollState()
     Column(
-        modifier = modifier,
-    ) {
+        modifier = modifier
+            .scrollable(state = scrollState, orientation = Orientation.Vertical)
+            .clickable(onClick = {
+                keyboardController?.hide()
+            }),
+        ) {
         Spacer(modifier = Modifier.height(80.dp))
         Image(
             modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
-            painter = painterResource(id = R.drawable.logo_300x300),
+            painter = painterResource(id = R.drawable.logo_round_white_300),
             contentDescription = "Logo",
             )
-        Spacer(modifier = Modifier.height(60.dp))
+        Spacer(modifier = Modifier.height(80.dp))
         val passwordFocusRequester = FocusRequester()
         Column(
             modifier = Modifier
@@ -69,7 +88,9 @@ fun AuthenticationForm(
                     .focusRequester(passwordFocusRequester),
                 password = password,
                 onPasswordChanged = onPasswordChanged,
-                onDoneClicked = onAuthenticate
+                onDoneClicked =  {
+                    keyboardController?.hide()
+                }
             )
             Spacer(modifier = Modifier.height(12.dp))
             AnimatedVisibility(
@@ -84,7 +105,8 @@ fun AuthenticationForm(
                 enableAuthentication = enableAuthentication,
                 authenticationMode = authenticationMode,
                 onAuthenticate = onAuthenticate,
-                navController = navController
+                navController = navController,
+                authenticationState = authenticationState
             )
             Spacer(modifier = Modifier.weight(1f))
         }

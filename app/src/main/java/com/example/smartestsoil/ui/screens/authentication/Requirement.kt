@@ -25,7 +25,7 @@ fun Requirement(
     satisfied: Boolean
 ) {
     val tint = if (satisfied) {
-        MaterialTheme.colors.primary
+        MaterialTheme.colors.secondary
     } else MaterialTheme.colors.onSurface.copy(alpha = 0.4f)
 
     val requirementStatus = if (satisfied) {
@@ -54,7 +54,7 @@ fun Requirement(
         Text(
             modifier = Modifier.clearAndSetSemantics { },
             text = message,
-            fontSize = 12.sp,
+            fontSize = 14.sp,
             color = tint
         )
     }

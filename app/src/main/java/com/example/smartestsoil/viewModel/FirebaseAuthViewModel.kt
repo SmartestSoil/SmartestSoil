@@ -1,18 +1,13 @@
 package com.example.smartestsoil.viewModel
 
-import android.util.Log
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavGraph
-import androidx.navigation.NavHostController
-import androidx.navigation.Navigation
 import com.example.smartestsoil.model.AuthState
 import com.example.smartestsoil.model.AuthenticationMode
 import com.example.smartestsoil.model.PasswordRequirements
-import com.example.smartestsoil.ui.navigation.NavGraph
-import com.example.smartestsoil.ui.navigation.NavRoute
-import com.example.smartestsoil.ui.screens.authentication.Authentication
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -26,7 +21,6 @@ import kotlinx.coroutines.withContext
 class FirebaseAuthViewModel: ViewModel() {
     val uiState = MutableStateFlow(AuthState())
     var user = mutableStateOf<FirebaseUser?>(null)
-    //var startDestination = mutableStateOf("")
 
     private fun toggleAuthenticationMode() {
         val authenticationMode = uiState.value.authenticationMode
@@ -110,15 +104,7 @@ class FirebaseAuthViewModel: ViewModel() {
                     uiState.value = uiState.value.copy(
                         isLoading = false,
                         error = null
-
                     )
-                    // Here I tried to update the startDestination to be Home and then the
-
-
-
-
-
-
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -162,7 +148,6 @@ class FirebaseAuthViewModel: ViewModel() {
     fun logout() {
         viewModelScope.launch {
             Firebase.auth.signOut()
-            //startDestination.value = "Authenticate"
             user.value = null
         }
     }
