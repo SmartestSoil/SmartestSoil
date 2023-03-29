@@ -6,6 +6,7 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import com.example.smartestsoil.model.AuthState
 import com.example.smartestsoil.viewModel.AuthEvent
 
@@ -13,7 +14,8 @@ import com.example.smartestsoil.viewModel.AuthEvent
 fun AuthenticationContent(
     modifier: Modifier = Modifier,
     authenticationState: AuthState,
-    handleEvent: (event: AuthEvent) -> Unit
+    handleEvent: (event: AuthEvent) -> Unit,
+    navController: NavHostController
 ) {
     Box(
         modifier = modifier,
@@ -29,6 +31,7 @@ fun AuthenticationContent(
                 password = authenticationState.password,
                 completedPasswordRequirements = authenticationState.passwordRequirements,
                 enableAuthentication = authenticationState.isFormValid(),
+                navController = navController,
                 onEmailChanged = {
                     handleEvent(AuthEvent.EmailChanged(it))
                 },

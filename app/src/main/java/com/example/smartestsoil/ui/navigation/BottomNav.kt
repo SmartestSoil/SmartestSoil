@@ -5,19 +5,25 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.smartestsoil.model.TabItem
 
 @Composable
 fun BottomNav(navController: NavController) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    if (currentRoute == null || currentRoute == NavRoute.Authentication.path) {
+        return
+    }
+
     val items = listOf(
-        TabItem("Home", Icons.Filled.Home,"Home"),
-        TabItem("Soil", Icons.Filled.Favorite,"Locations"),
-        TabItem("Detail", Icons.Filled.Info,"Details"),
+        TabItem("Home", Icons.Filled.Home,"home"),
+        TabItem("Soil", Icons.Filled.LocationOn,"locations"),
+        TabItem("Detail", Icons.Filled.LocationOn,"detail"),
     )
     var selectedItem by remember { mutableStateOf(0) }
     BottomNavigation() {
@@ -26,6 +32,7 @@ fun BottomNav(navController: NavController) {
                 selected = selectedItem== index,
                 onClick = {
                     selectedItem =index
+
                     navController.navigate(item.route)
                 },
                 icon = {Icon(item.icon, contentDescription = null)},

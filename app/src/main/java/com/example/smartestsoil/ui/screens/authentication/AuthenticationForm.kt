@@ -11,6 +11,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.smartestsoil.R
+import androidx.navigation.NavHostController
 import com.example.smartestsoil.model.AuthenticationMode
 import com.example.smartestsoil.model.PasswordRequirements
 
@@ -25,7 +26,8 @@ fun AuthenticationForm(
     onEmailChanged: (email: String) -> Unit,
     onPasswordChanged: (password: String) -> Unit,
     onAuthenticate: () -> Unit,
-    onToggleMode: () -> Unit
+    onToggleMode: () -> Unit,
+    navController: NavHostController
 ) {
     Column(
         modifier = modifier,
@@ -33,7 +35,7 @@ fun AuthenticationForm(
         Spacer(modifier = Modifier.height(80.dp))
         Image(
             modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
-            painter = painterResource(id = R.drawable.logo),
+            painter = painterResource(id = R.drawable.logo_300x300),
             contentDescription = "Logo",
             )
         Spacer(modifier = Modifier.height(60.dp))
@@ -81,7 +83,8 @@ fun AuthenticationForm(
                 modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
                 enableAuthentication = enableAuthentication,
                 authenticationMode = authenticationMode,
-                onAuthenticate = onAuthenticate
+                onAuthenticate = onAuthenticate,
+                navController = navController
             )
             Spacer(modifier = Modifier.weight(1f))
         }

@@ -1,5 +1,5 @@
 package com.example.smartestsoil.ui.navigation
-
+/*
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -16,17 +16,14 @@ fun NavController(navController: NavHostController, startDestination: String) {
     NavHost(
         navController = navController,
         startDestination = startDestination ){
-        composable(route = "Home"){
+        composable(route = "home"){
             Home()
         }
-        composable(route = "Authentication"){
-            Authentication()
-        }
-        composable(route = "Locations"){
+        composable(route = "locations"){
             Locations()
         }
-        composable(route = "Details"){
+        composable(route = "details"){
             Details()
         }
     }
-}
+}*/
