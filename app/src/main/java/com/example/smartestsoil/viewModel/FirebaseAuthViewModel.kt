@@ -117,34 +117,6 @@ class FirebaseAuthViewModel: ViewModel() {
         }
     }
 
-    /*fun signUp(email: String, password: String) {
-        viewModelScope.launch {
-            Firebase.auth
-                .createUserWithEmailAndPassword(email, password)
-                .addOnSuccessListener {
-                    user.value = it.user
-                    Log.d("*****", "Registration done!!")
-                }
-                .addOnFailureListener {
-                    Log.e("*****", it.message.toString())
-                }
-        }
-    }
-
-    fun signIn(email: String, password: String) {
-        viewModelScope.launch {
-            Firebase.auth
-                .signInWithEmailAndPassword(email, password)
-                .addOnSuccessListener {
-                    user.value = it.user
-                    Log.d("*****", "Sign in done!!")
-                }
-                .addOnFailureListener {
-                    Log.e("*****", it.message.toString())
-                }
-        }
-    }*/
-
     fun logout() {
         viewModelScope.launch {
             Firebase.auth.signOut()
