@@ -38,7 +38,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 
-@Preview(showBackground = true)
+/*@Preview(showBackground = true)
 @Composable
 private fun DefaultPreview() {
     SmartestSoilTheme(/*useSystemUiController = false*/) {
@@ -49,16 +49,10 @@ private fun DefaultPreview() {
             Home()
         }
     }
-}
+}*/
 @Composable
 fun Home(sensorViewModel: SensorViewModel = viewModel()) {
-    val firebaseAuthViewModel: FirebaseAuthViewModel = viewModel()
-    /* Text(text = "this is the home")
-     Button(
-         onClick = { firebaseAuthViewModel.logout() }
-     ) {
-         Text(text = "Logout")
-     }*/
+
     SensorList(sensorViewModel.sensordata)
 }
 @Composable
