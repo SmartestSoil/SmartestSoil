@@ -1,10 +1,13 @@
 package com.example.smartestsoil.ui.screens.authentication
 
+import android.util.Log
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.smartestsoil.R
 import com.example.smartestsoil.model.AuthenticationMode
 
@@ -14,6 +17,7 @@ fun AuthenticationButton(
     authenticationMode: AuthenticationMode,
     enableAuthentication: Boolean,
     onAuthenticate: () -> Unit,
+    navController: NavHostController
 
 ) {
 
@@ -21,8 +25,14 @@ fun AuthenticationButton(
         modifier = modifier,
         onClick = {
             onAuthenticate()
+            if (enableAuthentication){
+                navController.navigate("home")
+
+            }else{
+                Log.d("ERRRRRROOOOOR","HELP")
+            }
         },
-        enabled = enableAuthentication
+
 
 
     ) {
