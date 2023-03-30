@@ -1,25 +1,17 @@
 package com.example.smartestsoil.ui.screens.authentication
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import android.util.Log
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.smartestsoil.R
 import com.example.smartestsoil.model.AuthState
 import com.example.smartestsoil.model.AuthenticationMode
-import com.example.smartestsoil.viewModel.AuthEvent
-import com.example.smartestsoil.viewModel.FirebaseAuthViewModel
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 
 @Composable
 fun AuthenticationButton(
