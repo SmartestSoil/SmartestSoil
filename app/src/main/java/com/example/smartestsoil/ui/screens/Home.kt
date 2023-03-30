@@ -39,18 +39,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 
-/*@Preview(showBackground = true)
-@Composable
-private fun DefaultPreview() {
-    SmartestSoilTheme(/*useSystemUiController = false*/) {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colors.background
-        ) {
-            Home()
-        }
-    }
-}*/
+
 @Composable
 fun Home(
     navController: NavController,
