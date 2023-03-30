@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.smartestsoil.model.SensorData
 import com.example.smartestsoil.ui.theme.SmartestSoilTheme
 import com.example.smartestsoil.viewModel.FirebaseAuthViewModel
@@ -51,7 +52,9 @@ private fun DefaultPreview() {
     }
 }*/
 @Composable
-fun Home(sensorViewModel: SensorViewModel = viewModel()) {
+fun Home(
+    navController: NavController,
+    sensorViewModel: SensorViewModel = viewModel()) {
 
     SensorList(sensorViewModel.sensordata)
 }
