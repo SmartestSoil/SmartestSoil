@@ -59,6 +59,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.0.0'
+    implementation 'com.google.code.gson:gson:2.8.8'
     implementation 'com.google.firebase:firebase-firestore-ktx:24.0.2'
     implementation 'com.google.firebase:firebase-auth-ktx:21.1.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
@@ -76,8 +77,10 @@ dependencies {
     implementation "com.patrykandpatrick.vico:compose-m2:1.6.4"
     // For `compose`. Creates a `ChartStyle` based on an M3 Material Theme.
     implementation "com.patrykandpatrick.vico:compose-m3:1.6.4"
+    implementation 'androidx.room:room-common:2.5.0'
+    implementation 'androidx.room:room-ktx:2.5.0'
 
-    
+
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'

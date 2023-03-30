@@ -7,21 +7,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.example.smartestsoil.R
 import com.example.smartestsoil.model.AuthenticationMode
-import com.example.smartestsoil.viewModel.AuthEvent
 
 @Composable
 fun AuthenticationButton(
     modifier: Modifier = Modifier,
     authenticationMode: AuthenticationMode,
     enableAuthentication: Boolean,
-    onAuthenticate: () -> Unit
+    onAuthenticate: () -> Unit,
+
 ) {
+
     Button(
         modifier = modifier,
         onClick = {
             onAuthenticate()
         },
         enabled = enableAuthentication
+
+
     ) {
         Text(
             text = stringResource(

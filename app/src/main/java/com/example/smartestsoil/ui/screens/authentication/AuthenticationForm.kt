@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.smartestsoil.model.AuthenticationMode
 import com.example.smartestsoil.model.PasswordRequirements
 
@@ -69,7 +70,7 @@ fun AuthenticationForm(
             AuthenticationButton(
                 enableAuthentication = enableAuthentication,
                 authenticationMode = authenticationMode,
-                onAuthenticate = onAuthenticate
+                onAuthenticate = onAuthenticate,
             )
             Spacer(modifier = Modifier.weight(1f))
             ToggleAuthenticationMode(

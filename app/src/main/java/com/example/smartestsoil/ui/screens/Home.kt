@@ -1,11 +1,15 @@
 package com.example.smartestsoil.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,11 +29,9 @@ import com.patrykandpatrick.vico.compose.axis.vertical.endAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.startAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
 import com.patrykandpatrick.vico.compose.chart.line.lineChart
-import com.patrykandpatrick.vico.core.chart.decoration.Decoration
-import com.patrykandpatrick.vico.core.chart.insets.ChartInsetter
 import com.patrykandpatrick.vico.core.entry.FloatEntry
 import com.patrykandpatrick.vico.core.entry.entryModelOf
-import com.patrykandpatrick.vico.core.marker.Marker
+
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -61,6 +63,7 @@ fun Home(sensorViewModel: SensorViewModel = viewModel()) {
 }
 @Composable
 fun SensorList(sensordata: List<SensorData>) {
+
     val currentDate = LocalDate.now(ZoneId.systemDefault())
     val dateFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
 
@@ -74,19 +77,24 @@ fun SensorList(sensordata: List<SensorData>) {
     val temperatureEntries = todaysData.mapIndexed { index, sensorData ->
         FloatEntry(index.toFloat(), sensorData.soil_temperature)
     }
+    val moistureEntries = todaysData.mapIndexed { index, sensorData ->
+        FloatEntry(index.toFloat(), sensorData.soil_moisture)
+    }
+    val chartEntryModel = entryModelOf(temperatureEntries, moistureEntries)
 
 
-    val chartEntryModel = entryModelOf(temperatureEntries)
-
+    val itemsList = listOf("Item 1", "Item 2", "Item 3", "Item 4", "Item 5")
+    //val chartEntryModel = entryModelOf(entriesOf(4f, 12f, 8f, 16f),
+    //   entriesOf(12f, 16f, 4f, 12f))
     // Update the stored value when a new value is fetched
     if (moistureValue != "N/A") {
         lastStoredMoistureValue.value = moistureValue.toString()
     }
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 100.dp),
-        contentAlignment = Alignment.TopCenter
+            .padding(vertical = 60.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
             modifier = Modifier
@@ -103,24 +111,72 @@ fun SensorList(sensordata: List<SensorData>) {
                 color = Color.White
             )
         }
+        Spacer(modifier = Modifier.height(32.dp)) // Add some space between the boxes
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 50.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Chart(
+                chart = lineChart(spacing = 20.dp),
+                model = chartEntryModel,
+                startAxis = startAxis(),
+                bottomAxis = bottomAxis(),
+                endAxis = endAxis(),
+                //marker = Marker,
+                isZoomEnabled = true,
+            )
+        }
+        Spacer(modifier = Modifier.height(60.dp)) // Add some space between the boxes
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth(0.8f)
+                .padding(vertical = 4.dp)
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = { /* Handle click here */ }
+                ),
+            shape = RoundedCornerShape(4.dp),
+            elevation = 4.dp,
+            color = MaterialTheme.colors.surface
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text("Your text content goes here.")
+            }
+
+
+
+                /* LazyColumn(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
+            items(itemsList) { item ->
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f)
+                        .padding(vertical = 10.dp)
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                            onClick = { /* Handle item click here */ }
+                        ),
+                    shape = RoundedCornerShape(4.dp),
+                    elevation = 4.dp,
+                    color = MaterialTheme.colors.surface
+                ) {
+                    Row(modifier = Modifier.padding(20.dp)) {
+                        Text(
+                            item,
+                            modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
+                            color = Color.White,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
+        }*/
+            }
+
+
     }
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 50.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Chart(
-            chart = lineChart( spacing= 20.dp ),
-            model = chartEntryModel,
-            startAxis = startAxis(),
-            bottomAxis = bottomAxis(),
-            endAxis= endAxis(),
-           //marker = Marker,
-            isZoomEnabled= true,
-
-        )
-    }
-
-
 }

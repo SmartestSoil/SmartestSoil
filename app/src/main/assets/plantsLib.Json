@@ -1,0 +1,212 @@
+{
+  "popularHouseplants": [
+    {
+        "plantName": "Peace Lily",
+        "care": {
+            "light": "Low to bright indirect light",
+            "water": "Keep the soil consistently moist, but not soggy",
+            "fertilizer": "Every 2-3 months, during the growing season"
+        },
+        "suitableMoisture": {
+            "min": 50,
+            "max": 70
+        },
+        "suitableTemperature": {
+            "min": 18,
+            "max": 27
+        },
+        "description": "The Peace Lily (Spathiphyllum) is a popular, low-maintenance houseplant known for its dark green leaves and elegant white flowers. It is an excellent choice for beginners, as it is tolerant of a wide range of conditions and can thrive in various light levels. To care for a Peace Lily, place it in low to bright indirect light, keep the soil consistently moist without overwatering, and apply a balanced, water-soluble fertilizer every 2-3 months during the growing season."
+    },
+    {
+        "plantName": "Aloe Vera",
+        "care": {
+            "light": "Bright indirect light",
+            "water": "Allow the soil to dry out between waterings",
+            "fertilizer": "Every 2-3 months, during the growing season"
+        },
+        "suitableMoisture": {
+            "min": 40,
+            "max": 60
+        },
+        "suitableTemperature": {
+            "min": 13,
+            "max": 27
+        },
+        "description": "Aloe Vera (Aloe barbadensis) is a popular, low-maintenance houseplant known for its thick, fleshy leaves that contain a healing gel. It is an excellent choice for beginners, as it is tolerant of a wide range of conditions and can thrive in various light levels. To care for Aloe Vera, place it in bright indirect light, water when the soil is completely dry, and apply a balanced, water-soluble fertilizer every 2-3 months during the growing season."
+    },
+    {
+        "plantName": "Fiddle Leaf Fig",
+        "care": {
+            "light": "Bright indirect light",
+            "water": "Allow the top inch of soil to dry out between waterings",
+            "fertilizer": "Every 2-3 months, during the growing season"
+        },
+        "suitableMoisture": {
+            "min": 40,
+            "max": 65
+        },
+        "suitableTemperature": {
+            "min": 16,
+            "max": 24
+        },
+        "description": "The Fiddle Leaf Fig (Ficus lyrata) is a popular houseplant known for its large, glossy leaves that resemble the shape of a fiddle. It requires a bit more care compared to other houseplants, but with proper attention, it can thrive indoors. To care for a Fiddle Leaf Fig, place it in bright indirect light, water when the top inch of soil is dry, and apply a balanced, water-soluble fertilizer every 2-3 months during the growing season."
+    },
+    {
+    "plantName": "Rubber Plant",
+    "care": {
+        "light": "Bright indirect light",
+        "water": "Allow the top inch of soil to dry out between waterings",
+        "fertilizer": "Every 6-8 weeks, during the growing season"
+    },
+    "suitableMoisture": {
+        "min": 40,
+        "max": 50
+    },
+    "suitableTemperature": {
+        "min": 15,
+        "max": 29
+    },
+    "description": "The Rubber Plant (Ficus elastica) is a popular houseplant known for its large, glossy, dark green leaves. It is relatively low-maintenance and can tolerate a range of indoor conditions. To care for a Rubber Plant, place it in bright indirect light, allow the top inch of soil to dry out between waterings, and apply a balanced, water-soluble fertilizer every 6-8 weeks during the growing season. Prune the plant as needed to maintain the desired shape and size."
+}
+],
+    
+  "demandingHouseplants": [
+    {
+        "plantName": "Boston Fern",
+        "care": {
+            "light": "Bright indirect light",
+            "water": "Keep the soil consistently moist, but not soggy",
+            "fertilizer": "Every 4-6 weeks, during the growing season"
+        },
+        "suitableMoisture": {
+            "min": 50,
+            "max": 80
+        },
+        "suitableTemperature": {
+            "min": 16,
+            "max": 24
+        },
+        "description": "The Boston Fern (Nephrolepis exaltata) is a popular houseplant known for its feathery, arching fronds. It requires more attention compared to other houseplants due to its need for high humidity and consistent moisture. To care for a Boston Fern, place it in bright indirect light, keep the soil consistently moist without overwatering, and apply a balanced, water-soluble fertilizer every 4-6 weeks during the growing season. Maintain high humidity by placing the plant on a tray with wet pebbles or by using a humidifier."
+    },
+        {
+        "plantName": "Calathea",
+        "care": {
+            "light": "Low to medium indirect light",
+            "water": "Keep the soil consistently moist, but not soggy",
+            "fertilizer": "Every 4-6 weeks, during the growing season"
+        },
+        "suitableMoisture": {
+            "min": 50,
+            "max": 80
+        },
+        "suitableTemperature": {
+            "min": 18,
+            "max": 24
+        },
+        "description": "Calathea is a popular houseplant known for its strikingly patterned leaves that come in various colors and shapes. This plant can be demanding in terms of water and temperature requirements. To care for a Calathea, place it in low to medium indirect light, keep the soil consistently moist without overwatering, and apply a balanced, water-soluble fertilizer every 4-6 weeks during the growing season. Maintain high humidity by placing the plant on a tray with wet pebbles or by using a humidifier."
+    },
+    {
+        "plantName": "Gardenia",
+        "care": {
+            "light": "Bright indirect light",
+            "water": "Keep the soil consistently moist, but not soggy",
+            "fertilizer": "Every 4-6 weeks, during the growing season"
+        },
+        "suitableMoisture": {
+            "min": 50,
+            "max": 60
+        },
+        "suitableTemperature": {
+            "min": 18,
+            "max": 24
+        },
+        "description": "Gardenia (Gardenia jasminoides) is a popular houseplant known for its beautiful, fragrant white flowers. This plant can be demanding in terms of water and temperature requirements. To care for a Gardenia, place it in bright indirect light, keep the soil consistently moist without overwatering, and apply a balanced, water-soluble fertilizer every 4-6 weeks during the growing season. Maintain moderate humidity by placing the plant on a tray with wet pebbles or by using a humidifier."
+    },
+    {
+        "plantName": "Maidenhair Fern",
+        "care": {
+            "light": "Low to medium indirect light",
+            "water": "Keep the soil consistently moist, but not soggy",
+            "fertilizer": "Every 4-6 weeks, during the growing season"
+        },
+        "suitableMoisture": {
+            "min": 60,
+            "max": 80
+        },
+        "suitableTemperature": {
+            "min": 16,
+            "max": 24
+        },
+        "description": "Maidenhair Fern (Adiantum) is a delicate houseplant known for its graceful, feathery fronds and slender black stems. This plant can be demanding in terms of water and temperature requirements. To care for a Maidenhair Fern, place it in low to medium indirect light, keep the soil consistently moist without overwatering, and apply a balanced, water-soluble fertilizer every 4-6 weeks during the growing season. Maintain high humidity by placing the plant on a tray with wet pebbles or by using a humidifier."
+    }],
+
+  "edibleHouseplants": [
+    {
+        "plantName": "Tomato",
+        "care": {
+            "light": "Full sun, at least 6-8 hours of direct sunlight",
+            "water": "Water regularly, keeping the soil consistently moist but not soggy",
+            "fertilizer": "Every 4-6 weeks, during the growing season"
+        },
+        "suitableMoisture": {
+            "min": 40,
+            "max": 70
+        },
+        "suitableTemperature": {
+            "min": 16,
+            "max": 30
+        },
+        "description": "Tomato plants (Solanum lycopersicum) are popular edible houseplants that produce a variety of fruit sizes, shapes, and colors. To grow tomatoes indoors, place them in a sunny spot that receives at least 6-8 hours of direct sunlight, water regularly to keep the soil consistently moist, and apply a balanced, water-soluble fertilizer every 4-6 weeks during the growing season. Providing a tomato cage or stake for support is also essential."
+    },
+    {
+        "plantName": "Lettuce",
+        "care": {
+            "light": "Full sun to partial shade, at least 4-6 hours of direct sunlight",
+            "water": "Keep the soil consistently moist, but not soggy",
+            "fertilizer": "Every 4-6 weeks, during the growing season"
+        },
+        "suitableMoisture": {
+            "min": 50,
+            "max": 70
+        },
+        "suitableTemperature": {
+            "min": 4,
+            "max": 24
+        },
+        "description": "Lettuce (Lactuca sativa) is an easy-to-grow edible houseplant that thrives in a range of indoor conditions. To grow lettuce indoors, place it in a spot that receives at least 4-6 hours of direct sunlight, keep the soil consistently moist without overwatering, and apply a balanced, water-soluble fertilizer every 4-6 weeks during the growing season. Harvest the outer leaves when they're large enough, allowing the inner leaves to continue growing."
+    },
+    {
+        "plantName": "Scallions",
+        "care": {
+            "light": "Full sun to partial shade, at least 4-6 hours of direct sunlight",
+            "water": "Keep the soil consistently moist, but not soggy",
+            "fertilizer": "Every 4-6 weeks, during the growing season"
+        },
+        "suitableMoisture": {
+            "min": 50,
+            "max": 70
+        },
+        "suitableTemperature": {
+            "min": 10,
+            "max": 24
+        },
+        "description": "Scallions (Allium fistulosum), also known as green onions, are a versatile edible houseplant that can be grown indoors. To grow scallions, place them in a spot that receives at least 4-6 hours of direct sunlight, keep the soil consistently moist without overwatering, and apply a balanced, water-soluble fertilizer every 4-6 weeks during the growing season. Harvest the green tops as needed, leaving at least 1-2 inches above the soil for regrowth."
+    },
+    {
+        "plantName": "Swiss Chard",
+        "care": {
+            "light": "Full sun to partial shade, at least 4-6 hours of direct sunlight",
+            "water": "Keep the soil consistently moist, but not soggy",
+            "fertilizer": "Every 4-6 weeks, during the growing season"
+        },
+        "suitableMoisture": {
+            "min": 50,
+            "max": 70
+        },
+        "suitableTemperature": {
+            "min": 10,
+            "max": 27
+        },
+        "description": "Swiss Chard (Beta vulgaris subsp. cicla) is an edible houseplant known for its colorful, nutrient-rich leaves. It is a versatile plant that can be grown indoors under the right conditions. To grow Swiss Chard, place it in a spot that receives at least 4-6 hours of direct sunlight, keep the soil consistently moist without overwatering, and apply a balanced, water-soluble fertilizer every 4-6 weeks during the growing season. Harvest the outer leaves when they're large enough, allowing the inner leaves to continue growing."
+}   ]
+}
