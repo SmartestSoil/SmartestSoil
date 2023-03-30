@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -15,28 +17,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.smartestsoil.model.PlantModel
 import com.example.smartestsoil.model.SensorData
-import com.example.smartestsoil.ui.theme.SmartestSoilTheme
-import com.example.smartestsoil.viewModel.FirebaseAuthViewModel
+import com.example.smartestsoil.viewModel.PlantListViewModel
 import com.example.smartestsoil.viewModel.SensorViewModel
-import com.patrykandpatrick.vico.compose.axis.horizontal.bottomAxis
-import com.patrykandpatrick.vico.compose.axis.vertical.endAxis
-import com.patrykandpatrick.vico.compose.axis.vertical.startAxis
-import com.patrykandpatrick.vico.compose.chart.Chart
-import com.patrykandpatrick.vico.compose.chart.line.lineChart
-import com.patrykandpatrick.vico.core.entry.FloatEntry
-import com.patrykandpatrick.vico.core.entry.entryModelOf
-
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 
 
 
@@ -44,35 +35,14 @@ import java.time.format.DateTimeFormatter
 fun Home(
     navController: NavController,
     sensorViewModel: SensorViewModel = viewModel()) {
-
     SensorList(sensorViewModel.sensordata)
 }
 @Composable
 fun SensorList(sensordata: List<SensorData>) {
-
-    val currentDate = LocalDate.now(ZoneId.systemDefault())
-    val dateFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
-
     val lastStoredMoistureValue = rememberSaveable { mutableStateOf("N/A") }
     val moistureValue = sensordata.lastOrNull()?.soil_moisture ?: lastStoredMoistureValue.value
-    val todaysData = sensordata.filter { sensorData ->
-        val timestampDate = LocalDateTime.parse(sensorData.timestamp, dateFormatter).toLocalDate()
-        timestampDate == currentDate
-    }
-
-    val temperatureEntries = todaysData.mapIndexed { index, sensorData ->
-        FloatEntry(index.toFloat(), sensorData.soil_temperature)
-    }
-    val moistureEntries = todaysData.mapIndexed { index, sensorData ->
-        FloatEntry(index.toFloat(), sensorData.soil_moisture)
-    }
-    val chartEntryModel = entryModelOf(temperatureEntries, moistureEntries)
 
 
-    val itemsList = listOf("Item 1", "Item 2", "Item 3", "Item 4", "Item 5")
-    //val chartEntryModel = entryModelOf(entriesOf(4f, 12f, 8f, 16f),
-    //   entriesOf(12f, 16f, 4f, 12f))
-    // Update the stored value when a new value is fetched
     if (moistureValue != "N/A") {
         lastStoredMoistureValue.value = moistureValue.toString()
     }
@@ -104,17 +74,10 @@ fun SensorList(sensordata: List<SensorData>) {
                 .padding(horizontal = 50.dp),
             contentAlignment = Alignment.Center
         ) {
-            Chart(
-                chart = lineChart(spacing = 20.dp),
-                model = chartEntryModel,
-                startAxis = startAxis(),
-                bottomAxis = bottomAxis(),
-                endAxis = endAxis(),
-                //marker = Marker,
-                isZoomEnabled = true,
-            )
+             SensorChart(sensordata)
+
         }
-        Spacer(modifier = Modifier.height(60.dp)) // Add some space between the boxes
+        Spacer(modifier = Modifier.height(40.dp)) // Add some space between the boxes
         Surface(
             modifier = Modifier
                 .fillMaxWidth(0.8f)
@@ -128,9 +91,12 @@ fun SensorList(sensordata: List<SensorData>) {
             elevation = 4.dp,
             color = MaterialTheme.colors.surface
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(modifier = Modifier.padding(20.dp)) {
                 Text("Your text content goes here.")
+                PlantListScreen("popularHouseplants")
             }
+
+
 
 
 
@@ -161,8 +127,18 @@ fun SensorList(sensordata: List<SensorData>) {
             }
         }
     }*/
-        }
 
 
     }
-}
+}}
+/*@Composable
+fun PlantList(viewModel: PlantListViewModel = viewModel()) {
+    val plantList = viewModel.getPlantList(LocalContext.current)
+
+    LazyColumn {
+        items(plantList) { plant ->
+            Text(text = plant.plantName)
+            // Add more UI elements to display other plant details
+        }
+    }
+}*/
