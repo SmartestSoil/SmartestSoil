@@ -20,7 +20,6 @@ import com.example.smartestsoil.ui.theme.SmartestSoilTheme
 import com.example.smartestsoil.viewModel.FirebaseAuthViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +43,7 @@ class MainActivity : ComponentActivity() {
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainScreen() {
+
     val navController = rememberNavController()
 
     Scaffold(

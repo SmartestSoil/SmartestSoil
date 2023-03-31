@@ -13,6 +13,7 @@ import com.example.smartestsoil.R
 import com.example.smartestsoil.model.AuthState
 import com.example.smartestsoil.model.AuthenticationMode
 
+
 @Composable
 fun AuthenticationButton(
     modifier: Modifier = Modifier,
@@ -22,6 +23,7 @@ fun AuthenticationButton(
     navController: NavHostController,
     authenticationState: AuthState,
 ) {
+
     Button(
         modifier = modifier,
         colors = ButtonDefaults.buttonColors(
@@ -31,12 +33,14 @@ fun AuthenticationButton(
         onClick = {
             onAuthenticate()
             if (enableAuthentication) {
-                navController.navigate("Home")
+                navController.navigate("home")
             } else {
                 authenticationState.error
             }
         },
-        enabled = enableAuthentication
+
+
+
     ) {
         Text(
             modifier = modifier.padding(5.dp),
