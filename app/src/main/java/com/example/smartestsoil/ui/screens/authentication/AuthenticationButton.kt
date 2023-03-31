@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.smartestsoil.R
 import com.example.smartestsoil.model.AuthState
@@ -20,6 +21,7 @@ import com.example.smartestsoil.viewModel.AuthEvent
 import com.example.smartestsoil.viewModel.FirebaseAuthViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+
 
 @Composable
 fun AuthenticationButton(
@@ -30,6 +32,7 @@ fun AuthenticationButton(
     navController: NavHostController,
     authenticationState: AuthState,
 ) {
+
     Button(
         modifier = modifier,
         colors = ButtonDefaults.buttonColors(
@@ -39,12 +42,14 @@ fun AuthenticationButton(
         onClick = {
             onAuthenticate()
             if (enableAuthentication) {
-                navController.navigate("Home")
+                navController.navigate("home")
             } else {
                 authenticationState.error
             }
         },
-        enabled = enableAuthentication
+
+
+
     ) {
         Text(
             modifier = modifier.padding(5.dp),

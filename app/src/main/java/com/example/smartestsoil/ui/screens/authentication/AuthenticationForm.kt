@@ -18,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.smartestsoil.R
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.smartestsoil.model.AuthState
 import com.example.smartestsoil.model.AuthenticationMode
