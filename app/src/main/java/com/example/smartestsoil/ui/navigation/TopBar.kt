@@ -5,9 +5,11 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -30,17 +32,22 @@ fun TopBar(navController: NavController) {
     var expanded by remember { mutableStateOf(false) }
 
     TopAppBar(
-        title = { Text("")},
-        navigationIcon = {
-            IconButton(onClick = {navController.navigate("info") }) {
-                Image(painter = painterResource(R.drawable.logo_110x110), contentDescription =  null)
-            }
-        },
+        title = {
+            Text(
+                text = "List of Plants",
+                color = MaterialTheme.colors.primary,
+                fontWeight = FontWeight.Light
+            )},
+        backgroundColor = Color.White,
         actions = {
             IconButton(
                 onClick = { expanded=!expanded }
             ) {
-                Icon(Icons.Filled.MoreVert, contentDescription = null)
+                Icon(
+                    Icons.Filled.MoreVert,
+                    contentDescription = null,
+                    tint = MaterialTheme.colors.primaryVariant
+                    )
             }
             DropdownMenu(
                 expanded = expanded,
@@ -49,10 +56,18 @@ fun TopBar(navController: NavController) {
                     onClick = {navController.navigate("info")},
 
                     ) {
-                    Icon(Icons.Filled.Info,  contentDescription = null)
+                    Icon(
+                        Icons.Filled.Info,
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.primaryVariant
+                    )
                 }
                 DropdownMenuItem(onClick = { navController.navigate("account") }) {
-                    Icon(Icons.Filled.AccountBox, contentDescription = null)
+                    Icon(
+                        Icons.Filled.AccountCircle,
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.primaryVariant
+                    )
 
                 }
                 DropdownMenuItem(
@@ -65,13 +80,13 @@ fun TopBar(navController: NavController) {
                         }},
 
                     ) {
-                    Icon(Icons.Filled.Logout,  contentDescription = null)
+                    Icon(
+                        Icons.Filled.Logout,
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.primaryVariant
+                    )
                 }
-
             }
         }
-
     )
-
-
 }
