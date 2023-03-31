@@ -3,12 +3,14 @@ package com.example.smartestsoil.ui.screens.authentication
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.AlertDialog
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.smartestsoil.R
 
@@ -34,21 +36,26 @@ fun AuthenticationErrorDialog(
                         dismissError()
                     }
                 ) {
-                    Text(text = stringResource(
-                        id = R.string.error_action))
+                    Text(
+                        color = MaterialTheme.colors.primaryVariant,
+                        text = stringResource(id = R.string.error_action),
+                        fontWeight = FontWeight.Bold
+                        )
                 }
             }
         },
         title = {
             Text(
-                text = stringResource(
-                    id = R.string.error_title),
-                fontSize = 18.sp
+                text = stringResource(id = R.string.error_title),
+                fontSize = 18.sp,
+                color = MaterialTheme.colors.primaryVariant,
+                fontWeight = FontWeight.Bold
             )
         },
         text = {
             Text(
-                text = error
+                text = error,
+                color = MaterialTheme.colors.primary
             )
         }
     )

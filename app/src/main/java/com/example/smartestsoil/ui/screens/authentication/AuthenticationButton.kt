@@ -1,15 +1,27 @@
 package com.example.smartestsoil.ui.screens.authentication
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import android.util.Log
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.smartestsoil.R
+import com.example.smartestsoil.model.AuthState
 import com.example.smartestsoil.model.AuthenticationMode
+import com.example.smartestsoil.viewModel.AuthEvent
+import com.example.smartestsoil.viewModel.FirebaseAuthViewModel
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+
 
 @Composable
 fun AuthenticationButton(
@@ -17,19 +29,22 @@ fun AuthenticationButton(
     authenticationMode: AuthenticationMode,
     enableAuthentication: Boolean,
     onAuthenticate: () -> Unit,
-    navController: NavHostController
-
+    navController: NavHostController,
+    authenticationState: AuthState,
 ) {
 
     Button(
         modifier = modifier,
+        colors = ButtonDefaults.buttonColors(
+            disabledBackgroundColor = MaterialTheme.colors.primaryVariant,
+            backgroundColor = MaterialTheme.colors.primaryVariant
+        ),
         onClick = {
             onAuthenticate()
-            if (enableAuthentication){
+            if (enableAuthentication) {
                 navController.navigate("home")
-
-            }else{
-                Log.d("ERRRRRROOOOOR","HELP")
+            } else {
+                authenticationState.error
             }
         },
 
@@ -37,6 +52,7 @@ fun AuthenticationButton(
 
     ) {
         Text(
+            modifier = modifier.padding(5.dp),
             text = stringResource(
                 if (authenticationMode ==
                     AuthenticationMode.SIGN_IN) {
@@ -44,7 +60,8 @@ fun AuthenticationButton(
                 } else {
                     R.string.action_sign_up
                 }
-            )
+            ),
+            color = MaterialTheme.colors.onPrimary
         )
     }
 }

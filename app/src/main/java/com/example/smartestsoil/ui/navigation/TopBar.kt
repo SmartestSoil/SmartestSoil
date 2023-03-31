@@ -8,14 +8,19 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.smartestsoil.R
 import com.example.smartestsoil.model.TabItem
+import com.example.smartestsoil.viewModel.FirebaseAuthViewModel
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 @Composable
 fun TopBar(navController: NavController) {
+    val firebaseAuthViewModel: FirebaseAuthViewModel = viewModel()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
@@ -51,7 +56,13 @@ fun TopBar(navController: NavController) {
 
                 }
                 DropdownMenuItem(
-                    onClick = {navController.navigate("logout") },
+                    onClick = {
+                        if(Firebase.auth.currentUser != null) {
+                            firebaseAuthViewModel.logout()
+                            navController.navigate("authentication")
+                        } else if (Firebase.auth.currentUser == null) {
+                            navController.navigate("authentication")
+                        }},
 
                     ) {
                     Icon(Icons.Filled.Logout,  contentDescription = null)

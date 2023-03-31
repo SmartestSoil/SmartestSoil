@@ -1,18 +1,33 @@
 package com.example.smartestsoil.ui.screens.authentication
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.smartestsoil.R
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.example.smartestsoil.model.AuthState
 import com.example.smartestsoil.model.AuthenticationMode
 import com.example.smartestsoil.model.PasswordRequirements
+import com.example.smartestsoil.viewModel.FirebaseAuthViewModel
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AuthenticationForm(
     modifier: Modifier = Modifier,
@@ -25,25 +40,41 @@ fun AuthenticationForm(
     onPasswordChanged: (password: String) -> Unit,
     onAuthenticate: () -> Unit,
     onToggleMode: () -> Unit,
-    navController: NavHostController
+    navController: NavHostController,
+    authenticationState: AuthState,
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val scrollState = rememberScrollState()
     Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(modifier = Modifier.height(32.dp))
-        AuthenticationTitle(
-            modifier = Modifier.fillMaxWidth(),
-            authenticationMode = authenticationMode
-        )
-        Spacer(modifier = Modifier.height(40.dp))
+        modifier = modifier
+            .scrollable(state = scrollState, orientation = Orientation.Vertical)
+            .clickable(onClick = {
+                keyboardController?.hide()
+            }),
+        ) {
+        Spacer(modifier = Modifier.height(80.dp))
+        Image(
+            modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
+            painter = painterResource(id = R.drawable.logo_round_white_300),
+            contentDescription = "Logo",
+            )
+        Spacer(modifier = Modifier.height(80.dp))
         val passwordFocusRequester = FocusRequester()
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(15.dp),
         ) {
+            AuthenticationTitle(
+                modifier = Modifier.fillMaxWidth(),
+                authenticationMode = authenticationMode
+            )
+            ToggleAuthenticationMode(
+                modifier = Modifier.fillMaxWidth(),
+                authenticationMode = authenticationMode,
+                toggleAuthentication = { onToggleMode() }
+            )
+            Spacer(modifier = Modifier.height(10.dp))
             EmailInput(
                 modifier = Modifier.fillMaxWidth(),
                 email = email,
@@ -58,31 +89,27 @@ fun AuthenticationForm(
                     .focusRequester(passwordFocusRequester),
                 password = password,
                 onPasswordChanged = onPasswordChanged,
-                onDoneClicked = onAuthenticate
+                onDoneClicked =  {
+                    keyboardController?.hide()
+                }
             )
             Spacer(modifier = Modifier.height(12.dp))
             AnimatedVisibility(
                 visible = authenticationMode ==
                         AuthenticationMode.SIGN_UP
             ) {
-                //PasswordRequirements(completedPasswordRequirements)
                 PasswordRequirements(satisfiedRequirements = completedPasswordRequirements)
             }
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(30.dp))
             AuthenticationButton(
+                modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
                 enableAuthentication = enableAuthentication,
                 authenticationMode = authenticationMode,
                 onAuthenticate = onAuthenticate,
-                navController = navController
+                navController = navController,
+                authenticationState = authenticationState
             )
             Spacer(modifier = Modifier.weight(1f))
-            ToggleAuthenticationMode(
-                modifier = Modifier.fillMaxWidth(),
-                authenticationMode = authenticationMode,
-                toggleAuthentication = {
-                    onToggleMode()
-                }
-            )
         }
     }
 }

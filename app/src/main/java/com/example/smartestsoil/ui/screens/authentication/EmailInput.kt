@@ -6,6 +6,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.runtime.Composable
@@ -26,14 +27,8 @@ fun EmailInput(
     TextField(
         modifier = modifier,
         value = email,
-        onValueChange = { email ->
-            onEmailChanged(email)
-        },
-        label = {
-            Text(text = stringResource(
-                id = R.string.label_email)
-            )
-        },
+        onValueChange = { email -> onEmailChanged(email) },
+        label = { Text(text = stringResource(id = R.string.label_email)) },
         singleLine = true,
         shape = RoundedCornerShape(1.dp),
         leadingIcon = {
@@ -50,6 +45,6 @@ fun EmailInput(
             onNext = {
                 onNextClicked()
             }
-        )
+        ),
     )
 }
