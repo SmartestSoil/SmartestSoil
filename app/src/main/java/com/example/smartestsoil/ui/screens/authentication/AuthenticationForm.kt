@@ -7,6 +7,7 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -40,10 +41,9 @@ fun AuthenticationForm(
     authenticationState: AuthState,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
-    val scrollState = rememberScrollState()
     Column(
         modifier = modifier
-            .scrollable(state = scrollState, orientation = Orientation.Vertical)
+            .verticalScroll(state = rememberScrollState())
             .clickable(onClick = {
                 keyboardController?.hide()
             }),
