@@ -14,9 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.smartestsoil.model.TabItem
+import com.example.smartestsoil.ui.screens.AddPlantImage
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -44,17 +46,15 @@ fun BottomNav(navController: NavController) {
     }
     // Dialog form composable for adding a plant
     if (showDialog) {
-        AlertDialog(
+        Dialog(
             onDismissRequest = { showDialog = false },
-            title = {
-                Text(text = "Add a plant", color = MaterialTheme.colors.primary, fontWeight = FontWeight.Medium) },
-            text = { Text(text = "Form here", color = MaterialTheme.colors.primary) },
-            confirmButton = {
-                Button(
+            content = {
+                AddPlantImage()
+                /*Button(
                     onClick = { showDialog = false }
                 ) {
                     Text("OK")
-                }
+                }*/
             }
         )
     }

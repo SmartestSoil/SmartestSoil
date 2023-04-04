@@ -2,11 +2,17 @@ package com.example.smartestsoil.ui.theme
 
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import com.example.smartestsoil.ui.screens.LightDarkToggle
 
 private val DarkColorPalette = darkColors(
     primary = Green02,
@@ -15,9 +21,9 @@ private val DarkColorPalette = darkColors(
     secondaryVariant = Green03,
     background = Green02,
     surface = Color.White,
-    onPrimary = Color.White,
+    onPrimary = Color.DarkGray,
     onSecondary = Color.White,
-    onBackground = Color.White,
+    onBackground = Color.DarkGray,
     onSurface = Color.White,
 
 )
@@ -39,7 +45,14 @@ private val LightColorPalette = lightColors(
 
 @Composable
 fun SmartestSoilTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
-    val colors = if (darkTheme) {
+    val (isDark, setIsDark) = remember { mutableStateOf(darkTheme) }
+
+    LightDarkToggle(
+        modifier = Modifier.padding(vertical = 16.dp),
+        onThemeChanged = setIsDark
+    )
+
+    val colors = if (isDark) {
         DarkColorPalette
     } else {
         LightColorPalette
