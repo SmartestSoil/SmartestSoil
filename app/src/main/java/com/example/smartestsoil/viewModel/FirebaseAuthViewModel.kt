@@ -1,5 +1,7 @@
 package com.example.smartestsoil.viewModel
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -121,4 +123,16 @@ class FirebaseAuthViewModel: ViewModel() {
             user.value = null
         }
     }
+
+    fun deleteUser() {
+        viewModelScope.launch {
+            Firebase.auth.currentUser!!.delete()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Log.d(TAG, "User deleted.")
+                    }
+                }
+        }
+    }
+
 }

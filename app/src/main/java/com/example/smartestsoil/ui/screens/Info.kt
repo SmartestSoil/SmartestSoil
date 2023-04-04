@@ -9,5 +9,4 @@ import androidx.navigation.NavHostController
 @Composable
 fun Info(navController: NavController) {
     Text("this is the info page")
-
 }
