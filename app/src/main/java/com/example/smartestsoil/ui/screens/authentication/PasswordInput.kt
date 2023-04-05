@@ -56,8 +56,8 @@ fun PasswordInput(
                     isPasswordHidden = !isPasswordHidden
                 },
                 imageVector = if (isPasswordHidden) {
-                    Icons.Default.Visibility
-                } else Icons.Default.VisibilityOff,
+                    Icons.Default.VisibilityOff
+                } else Icons.Default.Visibility,
                 contentDescription = null,
             )
         },
