@@ -33,7 +33,7 @@ fun AuthenticationButton(
         onClick = {
             onAuthenticate()
             if (enableAuthentication) {
-                navController.navigate("home")
+                navController.navigate("plantlist")
             } else {
                 authenticationState.error
             }

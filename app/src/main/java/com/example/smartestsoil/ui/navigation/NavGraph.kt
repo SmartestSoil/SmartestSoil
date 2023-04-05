@@ -25,10 +25,10 @@ fun NavGraph(modifier: Modifier = Modifier, navController: NavHostController) {
     ) {
         addAuthentication(navController, this)
 
+        addPlantListView(navController, this)
         addHome(navController, this)
         addAccount(navController, this)
         addDetails(navController, this)
-        addLocations(navController, this)
         addInfo(navController,this)
 
     }
@@ -42,6 +42,15 @@ private fun addAuthentication(
         Authentication(navController = navController)
     }
 }
+private fun addPlantListView(
+    navController: NavController,
+    navGraphBuilder: NavGraphBuilder
+) {
+    navGraphBuilder.composable(route = NavRoute.PlantListView.path) {
+
+        PlantListView()
+    }
+}
 private fun addHome(
     navController: NavController,
     navGraphBuilder: NavGraphBuilder
@@ -49,15 +58,6 @@ private fun addHome(
     navGraphBuilder.composable(route = NavRoute.Home.path) {
 
         Home(navController = navController)
-    }
-}
-private fun addLocations(
-    navController: NavController,
-    navGraphBuilder: NavGraphBuilder
-) {
-    navGraphBuilder.composable(route = NavRoute.Locations.path) {
-
-        Locations(navController = navController )
     }
 }
 private fun addDetails(

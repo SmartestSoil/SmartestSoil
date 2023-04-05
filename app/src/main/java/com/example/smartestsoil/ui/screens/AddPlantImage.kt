@@ -11,6 +11,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,15 +24,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
+import com.example.smartestsoil.model.addUserSensor
+import com.example.smartestsoil.ui.screens.authentication.EmailInput
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.patrykandpatrick.vico.core.extension.setFieldValue
 import java.util.*
 
 @Composable
 fun AddPlantImage() {
     var imageUri by remember { mutableStateOf<android.net.Uri?>(null) }
+
+    var sensorName by remember { mutableStateOf("") }
 
     val context = LocalContext.current
     val storageRef = FirebaseStorage.getInstance().reference
@@ -85,6 +92,29 @@ fun AddPlantImage() {
                     }
                 }
                 Spacer(modifier = Modifier.height(20.dp))
+                OutlinedTextField(
+                    value = sensorName,
+                    onValueChange = { sensorName = it },
+                    label = { Text(text = "Sensor name") },
+                    placeholder = { Text(text = "Enter a name for your sensor") },
+                    singleLine = true,
+                    shape = RoundedCornerShape(1.dp),
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+                Button(
+                    onClick = { addUserSensor(sensorName) },
+                    colors = ButtonDefaults.buttonColors(
+                        disabledBackgroundColor = MaterialTheme.colors.primary,
+                        backgroundColor = MaterialTheme.colors.primary
+                    )
+                ) {
+                    Text(
+                        modifier = Modifier.padding(5.dp),
+                        text = "Save",
+                        color = MaterialTheme.colors.onPrimary
+                    )
+                }
+                Spacer(modifier = Modifier.height(20.dp))
                 Button(
                     onClick = { launcher.launch("image/*") },
                     colors = ButtonDefaults.buttonColors(
@@ -101,8 +131,8 @@ fun AddPlantImage() {
                 Spacer(modifier = Modifier.height(20.dp))
                 Button(
                     onClick = {
-                        if (imageUri != null && userId != null) {
-                            uploadImage(imageUri!!, storageRef, context, userId)
+                        if (imageUri != null) {
+                            uploadImage(imageUri!!, storageRef, context)
                         } else {
                             Toast.makeText(context, "Please select an image", Toast.LENGTH_SHORT).show()
                         }
@@ -123,8 +153,8 @@ fun AddPlantImage() {
     }
 }
 
-private fun uploadImage(uri: android.net.Uri, storageRef: StorageReference, context: Context, userId: String) {
-    val imageRef = storageRef.child("images/$userId/${UUID.randomUUID()}")
+private fun uploadImage(uri: android.net.Uri, storageRef: StorageReference, context: Context) {
+    val imageRef = storageRef.child("images/${UUID.randomUUID()}")
     imageRef.putFile(uri).addOnSuccessListener {
         imageRef.downloadUrl.addOnSuccessListener { url ->
             Log.d("***", url.toString())

@@ -4,11 +4,11 @@ sealed class NavRoute(val path: String) {
 
     object Authentication: NavRoute("authentication")
 
+    object PlantListView: NavRoute("plantlist")
     object Home: NavRoute("home")
     object Account: NavRoute("account")
     object Detail: NavRoute("detail")
     object Info: NavRoute("info")
-    object Locations: NavRoute("locations")
 
 
 
