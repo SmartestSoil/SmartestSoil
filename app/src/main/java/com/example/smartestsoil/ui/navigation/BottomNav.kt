@@ -22,7 +22,7 @@ fun BottomNav(navController: NavController) {
 
     val items = listOf(
         TabItem("Home", Icons.Filled.Home,"home"),
-        TabItem("Soil", Icons.Filled.LocationOn,"locations"),
+        TabItem("Soil", Icons.Filled.LocationOn,"plantlist"),
         TabItem("Detail", Icons.Filled.LocationOn,"detail"),
     )
     var selectedItem by remember { mutableStateOf(0) }
