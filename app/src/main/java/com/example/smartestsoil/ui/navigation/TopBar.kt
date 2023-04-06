@@ -1,21 +1,21 @@
 package com.example.smartestsoil.ui.navigation
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.smartestsoil.R
-import com.example.smartestsoil.model.TabItem
 import com.example.smartestsoil.viewModel.FirebaseAuthViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -32,9 +32,20 @@ fun TopBar(navController: NavController) {
     var expanded by remember { mutableStateOf(false) }
 
     TopAppBar(
+        navigationIcon = {
+            IconButton(
+                modifier = Modifier.padding(7.dp),
+                onClick = { navController.navigate("home") }
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.logo_without_text_300),
+                    contentDescription = "Logo",
+                )
+            }
+                         },
         title = {
             Text(
-                text = "List of Plants",
+                text = "SmartestSoil",
                 color = MaterialTheme.colors.primary,
                 fontWeight = FontWeight.Light
             )},

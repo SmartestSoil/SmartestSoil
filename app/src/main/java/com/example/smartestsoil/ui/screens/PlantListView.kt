@@ -1,5 +1,6 @@
 package com.example.smartestsoil.ui.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.height
@@ -13,16 +14,17 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.WaterDrop
-import androidx.compose.material.icons.rounded.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.Dialog
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun PlantListView() {
     val cardData = remember { generateFakeCards() }
@@ -39,17 +41,27 @@ fun PlantListView() {
         Dialog(
             onDismissRequest = { showDialog = false },
             content = {
-                AddPlantImage()
-                /*Button(
-                    onClick = { showDialog = false }
-                ) {
-                    Text("OK")
-                }*/
+                AddSensor(onClose = { showDialog = false })
             }
         )
     }
 
-    Box() {
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                shape = CircleShape,
+                onClick = { onFABClick() },
+                modifier = Modifier.absolutePadding(bottom = 50.dp) // set bottom padding to move FAB on top of bottom nav bar
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = "Add FAB",
+                    tint = MaterialTheme.colors.onPrimary
+                )
+            }
+        },
+        floatingActionButtonPosition = FabPosition.End,
+    ) {
         LazyVerticalGrid(
             columns = GridCells.Adaptive(100.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -65,18 +77,6 @@ fun PlantListView() {
                     )
                 }
             }
-        }
-        FloatingActionButton(
-            //modifier = Modifier.align(alignment = Alignment.BottomEnd),
-            onClick = { onFABClick() },
-            backgroundColor = MaterialTheme.colors.secondary,
-            //shape = RoundedCornerShape(50.dp),
-        ) {
-            Icon(
-                imageVector = Icons.Rounded.Add,
-                contentDescription = "Add FAB",
-                tint = Color.White,
-            )
         }
     }
 }
