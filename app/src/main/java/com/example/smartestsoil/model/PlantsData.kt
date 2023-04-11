@@ -45,19 +45,16 @@ object PlantsLibrary {
 
 /*object PlantsLibrary {
     var plantList: List<PlantModel>? = null
-
     fun getPlantList(context: Context): List<PlantModel> {
         if (plantList == null) {
             plantList = loadPlantList(context)
         }
         return plantList!!
     }
-
     fun loadPlantList(context: Context): List<PlantModel> {
         val jsonString =
             context.assets.open("plantslib.json").bufferedReader().use { it.readText() }
         return Gson().fromJson(jsonString, object : TypeToken<List<PlantModel>>() {}.type)
-
     }
 }*/
 

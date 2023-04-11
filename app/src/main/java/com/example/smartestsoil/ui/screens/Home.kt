@@ -71,7 +71,7 @@ fun SensorList(sensordata: List<SensorData>) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 50.dp),
+                .padding(horizontal = 30.dp),
             contentAlignment = Alignment.Center
         ) {
              SensorChart(sensordata)
@@ -92,7 +92,7 @@ fun SensorList(sensordata: List<SensorData>) {
             color = MaterialTheme.colors.surface
         ) {
             Column(modifier = Modifier.padding(20.dp)) {
-                Text("Your text content goes here.")
+                Text("")
                 PlantListScreen("popularHouseplants")
             }
 

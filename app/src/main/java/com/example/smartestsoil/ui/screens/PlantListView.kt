@@ -2,6 +2,7 @@ package com.example.smartestsoil.ui.screens
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.height
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -16,16 +17,22 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.WaterDrop
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.Dialog
 
+
 @Composable
 fun PlantListView() {
-    val cardData = remember { generateFakeCards() }
+    val cardData = remember { mutableStateListOf(*generateFakeCards().toTypedArray()) }
+
+    // Function to handle removing a plant card
+    fun onPlantDelete(index: Int) {
+        cardData.removeAt(index)
+    }
 
     // State to track whether the dialog form is open
     var showDialog by remember { mutableStateOf(false) }
@@ -61,7 +68,8 @@ fun PlantListView() {
                     Plant(
                         moisture = card.first,
                         name = card.second,
-                        location = "Location"
+                        location = "Location",
+                        onDelete ={ onPlantDelete(index) }
                     )
                 }
             }
@@ -85,7 +93,8 @@ fun PlantListView() {
 fun Plant(
     moisture: String,
     name: String,
-    location: String
+    location: String,
+    onDelete: () -> Unit // Add a callback for delete action
 ) {
     Card(
         shape = RoundedCornerShape(1.dp),
@@ -96,44 +105,54 @@ fun Plant(
         elevation = 0.dp,
         backgroundColor = Color.Transparent
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.logo_round_white_300),
-                contentDescription = "Plant image",
-                modifier = Modifier.size(96.dp)
-            )
-            Row() {
-                Icon(
-                    imageVector = Icons.Default.WaterDrop,
-                    contentDescription = null,
-                    tint = MaterialTheme.colors.onPrimary
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.logo_round_white_300),
+                    contentDescription = "Plant image",
+                    modifier = Modifier.size(96.dp)
+                )
+                Row() {
+                    Icon(
+                        imageVector = Icons.Default.WaterDrop,
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.onPrimary
+                    )
+                    Text(
+                        text = moisture,
+                        color = MaterialTheme.colors.onPrimary,
+                        style = MaterialTheme.typography.h6,
+                        textAlign = TextAlign.Center
+                    )
+                }
+                Text(
+                    text = name,
+                    color = MaterialTheme.colors.onPrimary,
+                    style = MaterialTheme.typography.subtitle1,
+                    textAlign = TextAlign.Center
                 )
                 Text(
-                    text = moisture,
+                    text = location,
                     color = MaterialTheme.colors.onPrimary,
-                    style = MaterialTheme.typography.h6,
+                    style = MaterialTheme.typography.subtitle1,
                     textAlign = TextAlign.Center
                 )
             }
-            Text(
-                text = name,
-                color = MaterialTheme.colors.onPrimary,
-                style = MaterialTheme.typography.subtitle1,
-                textAlign = TextAlign.Center
-            )
-            Text(
-                text = location,
-                color = MaterialTheme.colors.onPrimary,
-                style = MaterialTheme.typography.subtitle1,
-                textAlign = TextAlign.Center
+            Icon(
+                imageVector = Icons.Default.Delete,
+                contentDescription = "Delete plant",
+                tint = Color.Red,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(8.dp)
+                    .clickable(onClick = onDelete) // Call the callback on click
             )
         }
     }
 }
-
 private fun generateFakeCards(): List<Pair<String, String>> {
     return MutableList(20) { index ->
         val cardNumber = index + 1

@@ -42,8 +42,7 @@ fun SensorChart(sensorData: List<SensorData>) {
     // Update the stored value when a new value is fetched
     Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 50.dp),
+            .fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
         Chart(
