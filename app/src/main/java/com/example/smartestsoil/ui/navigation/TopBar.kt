@@ -1,12 +1,13 @@
 package com.example.smartestsoil.ui.navigation
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -41,8 +42,7 @@ fun TopBar(navController: NavController) {
                     painter = painterResource(id = R.drawable.logo_without_text_300),
                     contentDescription = "Logo",
                 )
-            }
-                         },
+            }},
         title = {
             Text(
                 text = "SmartestSoil",
@@ -72,6 +72,11 @@ fun TopBar(navController: NavController) {
                         contentDescription = null,
                         tint = MaterialTheme.colors.primaryVariant
                     )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text(
+                        text = "Info",
+                        color = MaterialTheme.colors.primary
+                    )
                 }
                 DropdownMenuItem(onClick = { navController.navigate("account") }) {
                     Icon(
@@ -79,7 +84,11 @@ fun TopBar(navController: NavController) {
                         contentDescription = null,
                         tint = MaterialTheme.colors.primaryVariant
                     )
-
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text(
+                        text = "Account",
+                        color = MaterialTheme.colors.primary
+                    )
                 }
                 DropdownMenuItem(
                     onClick = {
@@ -95,6 +104,11 @@ fun TopBar(navController: NavController) {
                         Icons.Filled.Logout,
                         contentDescription = null,
                         tint = MaterialTheme.colors.primaryVariant
+                    )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text(
+                        text = "Logout",
+                        color = MaterialTheme.colors.primary
                     )
                 }
             }

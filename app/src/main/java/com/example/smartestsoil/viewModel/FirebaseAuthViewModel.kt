@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.smartestsoil.model.AuthState
 import com.example.smartestsoil.model.AuthenticationMode
 import com.example.smartestsoil.model.PasswordRequirements
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -96,8 +97,10 @@ class FirebaseAuthViewModel: ViewModel() {
             try {
                 val authResult = if (authenticationMode == AuthenticationMode.SIGN_IN) {
                     Firebase.auth.signInWithEmailAndPassword(email, password).await()
+                    //user.value = Firebase.auth.currentUser
                 } else {
                     Firebase.auth.createUserWithEmailAndPassword(email, password).await()
+                    //user.value = Firebase.auth.currentUser
                 }
                 withContext(Dispatchers.Main) {
                     user.value = authResult.user
