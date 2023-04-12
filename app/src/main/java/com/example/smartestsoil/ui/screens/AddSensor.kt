@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import com.example.smartestsoil.R
@@ -47,6 +48,7 @@ import com.example.smartestsoil.viewModel.UserSensorViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.launch
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -55,7 +57,7 @@ import java.io.ByteArrayOutputStream
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun AddSensor(onClose: () -> Unit) {
-    var imageUri by remember { mutableStateOf<android.net.Uri?>(null) }
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
     //var imageData by remember { mutableStateOf<ByteArray?>(null) }
     var sensorname by remember { mutableStateOf("") }
     //val userSensorViewModel: UserSensorViewModel = viewModel()
@@ -68,7 +70,7 @@ fun AddSensor(onClose: () -> Unit) {
 
     // Firebase references
     val auth = Firebase.auth
-    val storageRef = FirebaseStorage.getInstance().reference
+    val storageRef = Firebase.storage.reference
     val firestoreDb = Firebase.firestore
 
     // Function to upload image to Firebase Storage and store sensor data to Firestore
@@ -77,7 +79,8 @@ fun AddSensor(onClose: () -> Unit) {
         val user = auth.currentUser
         if (user == null) {
             // User is not authenticated, show error message
-            Toast.makeText(context, "You must be logged in to add a sensor", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "You must be logged in to add a sensor", Toast.LENGTH_SHORT)
+                .show()
             return
         }
 
@@ -88,6 +91,46 @@ fun AddSensor(onClose: () -> Unit) {
             return
         }
 
+        // Create a unique filename for the image
+        val filename = "${UUID.randomUUID()}.jpg"
+
+        // Upload image to Firebase Storage
+        val storageRef = storageRef.child("$filename")
+        imageUri?.let { u ->
+            storageRef.putFile(u)
+                .addOnSuccessListener { remoteUri ->
+                    Log.d("*****", remoteUri.toString())
+                }
+                .addOnFailureListener { e ->
+                    Log.e("ERROR*****", e.message.toString())
+                }
+        }
+
+        storageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
+            // Store sensor data to Firestore
+            val sensorData = hashMapOf(
+                "sensorName" to sensorname,
+                "imageUrl" to downloadUrl.toString()
+            )
+
+            firestoreDb.collection("sensors")
+                .document(sensorname)
+                .set(sensorData)
+                .addOnSuccessListener {
+                    // Sensor data stored successfully, show success message
+                    Toast.makeText(context, "Sensor added successfully", Toast.LENGTH_SHORT).show()
+                    onClose()
+                }
+                .addOnFailureListener { e ->
+                    // Sensor data storage failed, show error message
+                    Toast.makeText(context, "Error adding sensor: ${e.message}", Toast.LENGTH_SHORT)
+                        .show()
+                }
+
+        }
+    }
+
+                /*
         // Check if image is selected
         if (imageUri == null) {
             // Image is not selected, show error message
@@ -99,7 +142,7 @@ fun AddSensor(onClose: () -> Unit) {
         val filename = "${UUID.randomUUID()}.jpg"
 
         // Upload image to Firebase Storage
-        val imagesRef = storageRef.child("images/$filename")
+        val imagesRef = storageRef.child("$filename")
         imagesRef.putFile(imageUri!!)
             .addOnSuccessListener {
                 // Image upload successful, get the download URL
@@ -128,7 +171,7 @@ fun AddSensor(onClose: () -> Unit) {
                 Toast.makeText(context, "Error uploading image: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
-
+*/
     fun bitmapToByteArray(bitmap: Bitmap?): ByteArray {
         val stream = ByteArrayOutputStream()
         bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, stream)
@@ -143,7 +186,6 @@ fun AddSensor(onClose: () -> Unit) {
         }
     }
 
-    // !!!!! do this in the addSensor function instead !!!!!
     val cameraLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.TakePicturePreview()) { bitmap ->
         val byteArray = bitmapToByteArray(bitmap)
         val path = "${UUID.randomUUID()}.jpg"
@@ -335,7 +377,9 @@ fun AddSensor(onClose: () -> Unit) {
                 Spacer(modifier = Modifier.height(20.dp))
                 Button(
                     onClick = {
-                        if (sensorname.isNotEmpty() && imageUri != null) {
+                        addSensor()
+                        onClose()
+                       /*if (sensorname.isNotEmpty() && imageUri != null) {
                             if (currentUser != null) {
                                 val userId = currentUser.uid
                                 val storageRef = FirebaseStorage.getInstance().reference
@@ -354,13 +398,14 @@ fun AddSensor(onClose: () -> Unit) {
                             }
                             addSensor()
                             onClose()
+                            Toast.makeText(context, "Sensorname and image successfully added to Firebase", Toast.LENGTH_SHORT).show()
                         } else {
                             Toast.makeText(
                                 context,
                                 "Please provide a name and an image for your sensor",
                                 Toast.LENGTH_SHORT
                             ).show()
-                        }
+                        }*/
                     },
                     colors = ButtonDefaults.buttonColors(
                         disabledBackgroundColor = MaterialTheme.colors.primary,
@@ -413,6 +458,7 @@ fun AddSensor(onClose: () -> Unit) {
         }
     }
 }
+
 /*
 private fun uploadImage(uri: android.net.Uri, storageRef: StorageReference, context: Context) {
     val imageRef = storageRef.child("images/${UUID.randomUUID()}")
