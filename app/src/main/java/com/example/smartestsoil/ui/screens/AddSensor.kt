@@ -100,33 +100,31 @@ fun AddSensor(onClose: () -> Unit) {
             storageRef.putFile(u)
                 .addOnSuccessListener { remoteUri ->
                     Log.d("*****", remoteUri.toString())
+                    storageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
+                        // Store sensor data to Firestore
+                        val sensorData = hashMapOf(
+                            "sensorName" to sensorname,
+                            "imageUrl" to downloadUrl.toString()
+                        )
+
+                        firestoreDb.collection("sensors")
+                            .document(sensorname)
+                            .set(sensorData)
+                            .addOnSuccessListener {
+                                // Sensor data stored successfully, show success message
+                                Toast.makeText(context, "Sensor added successfully", Toast.LENGTH_SHORT).show()
+                                onClose()
+                            }
+                            .addOnFailureListener { e ->
+                                // Sensor data storage failed, show error message
+                                Toast.makeText(context, "Error adding sensor: ${e.message}", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                    }
                 }
                 .addOnFailureListener { e ->
                     Log.e("ERROR*****", e.message.toString())
                 }
-        }
-
-        storageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
-            // Store sensor data to Firestore
-            val sensorData = hashMapOf(
-                "sensorName" to sensorname,
-                "imageUrl" to downloadUrl.toString()
-            )
-
-            firestoreDb.collection("sensors")
-                .document(sensorname)
-                .set(sensorData)
-                .addOnSuccessListener {
-                    // Sensor data stored successfully, show success message
-                    Toast.makeText(context, "Sensor added successfully", Toast.LENGTH_SHORT).show()
-                    onClose()
-                }
-                .addOnFailureListener { e ->
-                    // Sensor data storage failed, show error message
-                    Toast.makeText(context, "Error adding sensor: ${e.message}", Toast.LENGTH_SHORT)
-                        .show()
-                }
-
         }
     }
 
