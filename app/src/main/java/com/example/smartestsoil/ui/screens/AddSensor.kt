@@ -416,42 +416,6 @@ fun AddSensor(onClose: () -> Unit) {
                         color = MaterialTheme.colors.onPrimary
                     )
                 }
-                Spacer(modifier = Modifier.height(20.dp))
-                Button(
-                    onClick = { launcher.launch("image/*") },
-                    colors = ButtonDefaults.buttonColors(
-                        disabledBackgroundColor = MaterialTheme.colors.primary,
-                        backgroundColor = MaterialTheme.colors.primary
-                    )
-                ) {
-                    Text(
-                        modifier = Modifier.padding(5.dp),
-                        text = "Select Image",
-                        color = MaterialTheme.colors.onPrimary
-                    )
-                }
-                Spacer(modifier = Modifier.height(20.dp))
-                Button(
-                    onClick = {
-                        if (imageUri != null) {
-                            //uploadImage(imageUri!!, storageRef, context)
-                        } else {
-                            Toast.makeText(context, "Please select an image", Toast.LENGTH_SHORT)
-                                .show()
-                        }
-                    },
-                    colors =
-                    ButtonDefaults.buttonColors(
-                        disabledBackgroundColor = MaterialTheme.colors.primary,
-                        backgroundColor = MaterialTheme.colors.primary
-                    )
-                ) {
-                    Text(
-                        modifier = Modifier.padding(5.dp),
-                        text = "Upload Image",
-                        color = MaterialTheme.colors.onPrimary
-                    )
-                }
             }
         }
     }
