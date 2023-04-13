@@ -23,27 +23,40 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.WaterDrop
 import androidx.compose.runtime.*
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.coroutineScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.cachedIn
+import androidx.paging.compose.collectAsLazyPagingItems
+import coil.compose.rememberImagePainter
+import com.example.smartestsoil.model.SensorsFirestorePagingSource
+import com.example.smartestsoil.model.UserSensor
+import com.google.firebase.firestore.FirebaseFirestore
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun PlantListView() {
-    val cardData = remember { mutableStateListOf(*generateFakeCards().toTypedArray()) }
-
-    // Function to handle removing a plant card
-    fun onPlantDelete(index: Int) {
-        cardData.removeAt(index)
-    }
-
+fun PlantListView(db: FirebaseFirestore){
+    // Paging configuration
+    val pagingConfig = PagingConfig(
+        pageSize = 10,
+        prefetchDistance = 5,
+        enablePlaceholders = false
+    )
     // State to track whether the dialog form is open
     var showDialog by remember { mutableStateOf(false) }
-
     // Function to handle FAB click and open the dialog form where new plant can be added
     fun onFABClick() {
         showDialog = true
     }
-// Dialog form composable for adding a plant
+
+    // Dialog form composable for adding a plant
     if (showDialog) {
         Dialog(
             onDismissRequest = { showDialog = false },
@@ -52,6 +65,14 @@ fun PlantListView() {
             }
         )
     }
+
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    // LazyPagingItems
+    val lazyPagingItems = remember {
+        val source = SensorsFirestorePagingSource(db)
+        val pager = Pager(config = pagingConfig, pagingSourceFactory = { source })
+        pager.flow.cachedIn(lifecycle.coroutineScope)
+    }.collectAsLazyPagingItems()
 
     Scaffold(
         floatingActionButton = {
@@ -68,34 +89,24 @@ fun PlantListView() {
             }
         },
         floatingActionButtonPosition = FabPosition.End,
-    ) {
+    ){
         LazyVerticalGrid(
-            columns = GridCells.Adaptive(100.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = PaddingValues(24.dp)
-        ) {
-            cardData.forEachIndexed { index, card ->
-                item(span = { GridItemSpan(1) }) {
-                    Plant(
-                        moisture = card.first,
-                        name = card.second,
-                        location = "Location",
-                        onDelete ={ onPlantDelete(index) }
-                    )
+            columns = GridCells.Adaptive(minSize = 100.dp),
+            contentPadding = PaddingValues(24.dp),
+            content = {
+                items(lazyPagingItems.itemCount) { index ->
+                    val sensor = lazyPagingItems[index]
+                    if (sensor != null) {
+                        SensorCard(sensor = sensor)
+                    }
                 }
             }
-        }
+        )
     }
 }
 
 @Composable
-fun Plant(
-    moisture: String,
-    name: String,
-    location: String,
-    onDelete: () -> Unit // Add a callback for delete action
-) {
+fun SensorCard(sensor: UserSensor) {
     Card(
         shape = RoundedCornerShape(1.dp),
         border = BorderStroke(0.dp, color = Color.Transparent),
@@ -105,57 +116,27 @@ fun Plant(
         elevation = 0.dp,
         backgroundColor = Color.Transparent
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.logo_round_white_300),
-                    contentDescription = "Plant image",
-                    modifier = Modifier.size(96.dp)
-                )
-                Row() {
-                    Icon(
-                        imageVector = Icons.Default.WaterDrop,
-                        contentDescription = null,
-                        tint = MaterialTheme.colors.onPrimary
-                    )
-                    Text(
-                        text = moisture,
-                        color = MaterialTheme.colors.onPrimary,
-                        style = MaterialTheme.typography.h6,
-                        textAlign = TextAlign.Center
-                    )
-                }
-                Text(
-                    text = name,
-                    color = MaterialTheme.colors.onPrimary,
-                    style = MaterialTheme.typography.subtitle1,
-                    textAlign = TextAlign.Center
-                )
-                Text(
-                    text = location,
-                    color = MaterialTheme.colors.onPrimary,
-                    style = MaterialTheme.typography.subtitle1,
-                    textAlign = TextAlign.Center
-                )
-            }
-            Icon(
-                imageVector = Icons.Default.Delete,
-                contentDescription = "Delete plant",
-                tint = Color.Red,
+        Column( modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally) {
+            Image(
+                painter = rememberImagePainter(
+                    data = sensor.imageUrl,
+                    builder = {
+                        crossfade(true)
+                    }
+                ),
+                contentDescription = sensor.sensorName,
+
                 modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(8.dp)
-                    .clickable(onClick = onDelete) // Call the callback on click
+                    .size(64.dp)
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop,
             )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = sensor.sensorName, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+
+
+
         }
-    }
-}
-private fun generateFakeCards(): List<Pair<String, String>> {
-    return MutableList(20) { index ->
-        val cardNumber = index + 1
-        "Moisture $cardNumber" to "Name $cardNumber"
     }
 }

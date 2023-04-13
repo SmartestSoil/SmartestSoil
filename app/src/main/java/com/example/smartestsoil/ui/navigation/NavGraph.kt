@@ -14,6 +14,7 @@ import com.example.smartestsoil.model.AuthenticationMode
 import com.example.smartestsoil.ui.screens.*
 import com.example.smartestsoil.ui.screens.authentication.Authentication
 import com.example.smartestsoil.ui.screens.authentication.AuthenticationButton
+import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
 fun NavGraph(modifier: Modifier = Modifier, navController: NavHostController) {
@@ -48,7 +49,7 @@ private fun addPlantListView(
 ) {
     navGraphBuilder.composable(route = NavRoute.PlantListView.path) {
 
-        PlantListView()
+        PlantListView(db= FirebaseFirestore.getInstance())
     }
 }
 private fun addHome(
