@@ -14,7 +14,9 @@ import com.example.smartestsoil.model.AuthenticationMode
 import com.example.smartestsoil.ui.screens.*
 import com.example.smartestsoil.ui.screens.authentication.Authentication
 import com.example.smartestsoil.ui.screens.authentication.AuthenticationButton
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
 
 @Composable
 fun NavGraph(modifier: Modifier = Modifier, navController: NavHostController) {
@@ -76,7 +78,8 @@ private fun addAccount(
 ) {
     navGraphBuilder.composable(route = NavRoute.Account.path) {
 
-        Account(navController = navController )
+        val userEmail=Firebase.auth.currentUser?.email?:""
+        Account(navController = navController, userEmail = userEmail )
     }
 }
 private fun addInfo(
@@ -85,7 +88,7 @@ private fun addInfo(
 ) {
     navGraphBuilder.composable(route = NavRoute.Info.path) {
 
-        Info(navController = navController )
+        Info(navController = navController, )
     }
 }
 /*fun popUpToHome(navController: NavHostController) {

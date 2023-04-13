@@ -74,7 +74,7 @@ fun TopBar(navController: NavController) {
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                     Text(
-                        text = "Info",
+                        text = "About",
                         color = MaterialTheme.colors.primary
                     )
                 }
