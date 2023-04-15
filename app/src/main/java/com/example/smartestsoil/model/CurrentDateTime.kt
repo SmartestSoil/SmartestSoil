@@ -11,7 +11,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun CurrentDateTime() {
+fun CurrentDateTime(): String {
     // Create a formatter to format the date and time
     val formatter = DateTimeFormatter.ofPattern("dd-MM-yyy HH:mm")
 
@@ -27,4 +27,5 @@ fun CurrentDateTime() {
         modifier = Modifier.padding(10.dp),
         color = MaterialTheme.colors.primary
     )
+    return formattedDateTime
 }

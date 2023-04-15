@@ -14,10 +14,17 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 
 data class UserSensor(
-    var imageUrl: String,
-    var sensorName:String
-
+    var imageUrl: String = "",
+    var sensorName:String = "",
+    var notes: List<Note> = emptyList()
 )
+
+data class Note(
+    val title: String = "",
+    val note: String = "",
+    val time: String = ""
+)
+
 class SensorsFirestorePagingSource(
     private val db: FirebaseFirestore
 ) : PagingSource<QuerySnapshot, UserSensor>() {
