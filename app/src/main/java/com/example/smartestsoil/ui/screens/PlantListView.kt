@@ -3,31 +3,24 @@ package com.example.smartestsoil.ui.screens
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.height
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.smartestsoil.R
 import androidx.compose.ui.Alignment
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.WaterDrop
 import androidx.compose.runtime.*
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.coroutineScope
@@ -36,8 +29,8 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.rememberImagePainter
-import com.example.smartestsoil.model.SensorsFirestorePagingSource
-import com.example.smartestsoil.model.UserSensor
+import com.example.smartestsoil.model.PlantsFirestorePagingSource
+import com.example.smartestsoil.model.UserPlant
 import com.google.firebase.firestore.FirebaseFirestore
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -69,7 +62,7 @@ fun PlantListView(db: FirebaseFirestore){
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     // LazyPagingItems
     val lazyPagingItems = remember {
-        val source = SensorsFirestorePagingSource(db)
+        val source = PlantsFirestorePagingSource(db)
         val pager = Pager(config = pagingConfig, pagingSourceFactory = { source })
         pager.flow.cachedIn(lifecycle.coroutineScope)
     }.collectAsLazyPagingItems()
@@ -95,18 +88,19 @@ fun PlantListView(db: FirebaseFirestore){
             contentPadding = PaddingValues(24.dp),
             content = {
                 items(lazyPagingItems.itemCount) { index ->
-                    val sensor = lazyPagingItems[index]
-                    if (sensor != null) {
-                        SensorCard(sensor = sensor)
+                    val plant = lazyPagingItems[index]
+                    if (plant != null) {
+                        PlantCard(plant)
                     }
                 }
+
             }
         )
     }
 }
 
 @Composable
-fun SensorCard(sensor: UserSensor) {
+fun PlantCard(plant: UserPlant) {
     Card(
         shape = RoundedCornerShape(1.dp),
         border = BorderStroke(0.dp, color = Color.Transparent),
@@ -120,12 +114,12 @@ fun SensorCard(sensor: UserSensor) {
             horizontalAlignment = Alignment.CenterHorizontally) {
             Image(
                 painter = rememberImagePainter(
-                    data = sensor.imageUrl,
+                    data = plant.imageUrl,
                     builder = {
                         crossfade(true)
                     }
                 ),
-                contentDescription = sensor.sensorName,
+                contentDescription = plant.plantName,
 
                 modifier = Modifier
                     .size(64.dp)
@@ -133,10 +127,13 @@ fun SensorCard(sensor: UserSensor) {
                 contentScale = ContentScale.Crop,
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = sensor.sensorName, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            Text(text = plant.plantName, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+
+
 
 
 
         }
+        Text(text = "what!!!!!", fontWeight = FontWeight.Bold, fontSize = 18.sp)
     }
 }

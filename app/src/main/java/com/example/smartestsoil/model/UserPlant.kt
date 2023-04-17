@@ -2,39 +2,36 @@ package com.example.smartestsoil.model
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
 
-data class UserSensor(
+data class UserPlant(
+    var plantid:String,
     var imageUrl: String,
-    var sensorName:String
+    var plantName:String,
+    var pairedSensor:String
 
-)
-class SensorsFirestorePagingSource(
+
+
+    )
+class PlantsFirestorePagingSource(
     private val db: FirebaseFirestore
-) : PagingSource<QuerySnapshot, UserSensor>() {
+) : PagingSource<QuerySnapshot, UserPlant>() {
 
-    override suspend fun load(params: LoadParams<QuerySnapshot>): LoadResult<QuerySnapshot, UserSensor> {
+    override suspend fun load(params: LoadParams<QuerySnapshot>): LoadResult<QuerySnapshot, UserPlant> {
         // Implementation of the load function
         return try {
-            val currentPage = params.key ?: db.collection("sensors")
-                .orderBy("sensorName")
+            val currentPage = params.key ?: db.collection("plants")
+                .orderBy("plantid")
                 .limit(params.loadSize.toLong())
                 .get()
                 .await()
 
             val lastDocumentSnapshot = currentPage.documents.lastOrNull()
             val nextPage = if (lastDocumentSnapshot != null) {
-                db.collection("sensors")
-                    .orderBy("sensorName")
+                db.collection("plants")
+                    .orderBy("plantid")
                     .startAfter(lastDocumentSnapshot)
                     .limit(params.loadSize.toLong())
                     .get()
@@ -43,14 +40,17 @@ class SensorsFirestorePagingSource(
                 null
             }
 
-            val sensorsList = currentPage.documents.map { documentSnapshot ->
+            val plantsList = currentPage.documents.map { documentSnapshot ->
+                val plantid = documentSnapshot.getString("plantid") ?: ""
                 val imageUrl = documentSnapshot.getString("imageUrl") ?: ""
-                val sensorName = documentSnapshot.getString("sensorName") ?: ""
-                UserSensor(imageUrl, sensorName)
+                val plantName = documentSnapshot.getString("plantName") ?: ""
+                val pairedSensor = documentSnapshot.getString("pairedSensor") ?: ""
+
+                UserPlant(plantid,imageUrl, plantName,pairedSensor)
             }
 
             LoadResult.Page(
-                data = sensorsList,
+                data = plantsList,
                 prevKey = null,
                 nextKey = nextPage
             )
@@ -59,7 +59,7 @@ class SensorsFirestorePagingSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<QuerySnapshot, UserSensor>): QuerySnapshot? {
+    override fun getRefreshKey(state: PagingState<QuerySnapshot, UserPlant>): QuerySnapshot? {
         // Implementation of the getRefreshKey function
         return null
     }

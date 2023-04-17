@@ -19,16 +19,16 @@ fun Account(navController: NavController, userEmail: String) {
     val user = FirebaseAuth.getInstance().currentUser
 
     // Remember the number of sensors as a state
-    var numOfSensors by remember { mutableStateOf(0) }
+    var numOfPlants by remember { mutableStateOf(0) }
 
 
     // Retrieve the number of sensors from Firestore when the composable is first created
-    LaunchedEffect(key1 = "numOfSensors") {
+    LaunchedEffect(key1 = "numOfPlants") {
         val db = Firebase.firestore
-        val sensorsCollection = db.collection("sensors")
-        sensorsCollection.get()
+        val plantsCollection = db.collection("plants")
+        plantsCollection.get()
             .addOnSuccessListener { querySnapshot ->
-                numOfSensors = querySnapshot.size()
+                numOfPlants = querySnapshot.size()
                 // Update the state with the retrieved number of sensors
 
             }
@@ -49,7 +49,7 @@ fun Account(navController: NavController, userEmail: String) {
         )
 
         Text(
-            text = "You have $numOfSensors plants.",
+            text = "You have $numOfPlants plants.",
             style = MaterialTheme.typography.body1,
             modifier = Modifier.padding(bottom = 8.dp)
         )
