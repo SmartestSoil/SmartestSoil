@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.height
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.coroutineScope
+import androidx.navigation.NavController
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
@@ -38,7 +40,7 @@ import com.google.firebase.ktx.Firebase
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun PlantListView(db: FirebaseFirestore){
+fun PlantListView(db: FirebaseFirestore, navController: NavController){
     // Paging configuration
     val pagingConfig = PagingConfig(
         pageSize = 10,
@@ -97,7 +99,9 @@ fun PlantListView(db: FirebaseFirestore){
                 items(lazyPagingItems.itemCount) { index ->
                     val plant = lazyPagingItems[index]
                     if (plant != null) {
-                        PlantCard(plant)
+                        PlantCard(plant) {
+                            navController.navigate("home"/*"plantDetail/${plant.id}"*/)
+                        }
                     }
                 }
 
@@ -108,13 +112,14 @@ fun PlantListView(db: FirebaseFirestore){
 
 
 @Composable
-fun PlantCard(plant: UserPlant) {
+fun PlantCard(plant: UserPlant, onClick: () -> Unit) {
     Card(
         shape = RoundedCornerShape(1.dp),
         border = BorderStroke(0.dp, color = Color.Transparent),
         modifier = Modifier
             .height(180.dp)
-            .width(140.dp),
+            .width(140.dp)
+            .clickable(onClick = onClick),
         elevation = 0.dp,
         backgroundColor = Color.Transparent
     ) {
