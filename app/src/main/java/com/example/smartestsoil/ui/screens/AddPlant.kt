@@ -2,7 +2,6 @@ package com.example.smartestsoil.ui.screens
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
@@ -29,7 +28,6 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
 import java.util.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -42,24 +40,25 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.style.TextAlign
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.smartestsoil.model.BottomSheetItem
-import com.example.smartestsoil.viewModel.UserSensorViewModel
+
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.launch
-import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
-fun AddSensor(onClose: () -> Unit) {
+fun AddPlant(onClose: () -> Unit) {
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     //var imageData by remember { mutableStateOf<ByteArray?>(null) }
-    var sensorname by remember { mutableStateOf("") }
+    var pairedSensor by remember { mutableStateOf("") }
+    var plantId =UUID.randomUUID().toString()
+    var plantName by remember { mutableStateOf("") }
+
     //val userSensorViewModel: UserSensorViewModel = viewModel()
 
     val context = LocalContext.current
@@ -73,21 +72,21 @@ fun AddSensor(onClose: () -> Unit) {
     val storageRef = Firebase.storage.reference
     val firestoreDb = Firebase.firestore
 
-    // Function to upload image to Firebase Storage and store sensor data to Firestore
-    fun addSensor() {
+    // Function to upload image to Firebase Storage and store plant data to Firestore
+    fun addPlant() {
         // Check if user is authenticated
         val user = auth.currentUser
         if (user == null) {
             // User is not authenticated, show error message
-            Toast.makeText(context, "You must be logged in to add a sensor", Toast.LENGTH_SHORT)
+            Toast.makeText(context, "You must be logged in to add a plant", Toast.LENGTH_SHORT)
                 .show()
             return
         }
 
         // Check if sensor name is empty
-        if (sensorname.isEmpty()) {
+        if (plantName.isEmpty()) {
             // Sensor name is empty, show error message
-            Toast.makeText(context, "Please enter a sensor name", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Please enter a plant name", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -101,22 +100,25 @@ fun AddSensor(onClose: () -> Unit) {
                 .addOnSuccessListener { remoteUri ->
                     Log.d("*****", remoteUri.toString())
                     storageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
-                        // Store sensor data to Firestore
-                        val sensorData = hashMapOf(
-                            "sensorName" to sensorname,
-                            "imageUrl" to downloadUrl.toString()
+                        // Store plant data to Firestore
+                        val plantData = hashMapOf(
+                            "imageUrl" to downloadUrl.toString(),
+                            "pairedSensor" to pairedSensor,
+                            "plantId" to plantId,
+                            "plantName" to plantName,
+
                         )
 
-                        firestoreDb.collection("sensors")
-                            .document(sensorname)
-                            .set(sensorData)
+                        firestoreDb.collection("plants")
+                            .document(plantName)
+                            .set(plantData)
                             .addOnSuccessListener {
-                                // Sensor data stored successfully, show success message
-                                Toast.makeText(context, "Sensor added successfully", Toast.LENGTH_SHORT).show()
+                                // Plant data stored successfully, show success message
+                                Toast.makeText(context, "Plant added successfully", Toast.LENGTH_SHORT).show()
                                 onClose()
                             }
                             .addOnFailureListener { e ->
-                                // Sensor data storage failed, show error message
+                                // Plant data storage failed, show error message
                                 Toast.makeText(context, "Error adding sensor: ${e.message}", Toast.LENGTH_SHORT)
                                     .show()
                             }
@@ -179,6 +181,7 @@ fun AddSensor(onClose: () -> Unit) {
     val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
             imageUri = it
+
             /*val bitmap = context.contentResolver?.openInputStream(it)?.use { stream -> BitmapFactory.decodeStream(stream) }
             imageData = bitmapToByteArray(bitmap)*/
         }
@@ -197,9 +200,7 @@ fun AddSensor(onClose: () -> Unit) {
         //imageData = byteArray
     }
 
-    fun chooseFromLibrary() {
-        launcher.launch("image/*")
-    }
+
 
     fun takePhoto() {
         cameraLauncher.launch(null)
@@ -212,9 +213,16 @@ fun AddSensor(onClose: () -> Unit) {
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
     )
+    fun chooseFromLibrary() {
+        launcher.launch("image/*")
+        coroutineScope.launch {
+            bottomSheetScaffoldState.bottomSheetState.collapse()
+        }
 
+
+    }
     val bottomSheetItems = listOf(
-        BottomSheetItem(title = "Choose from library", icon = Icons.Outlined.PhotoLibrary, onClick = ::chooseFromLibrary),
+        BottomSheetItem(title = "Choose from library", icon = Icons.Outlined.PhotoLibrary, onClick = ::chooseFromLibrary, ),
         BottomSheetItem(title = "Take photo", icon = Icons.Outlined.PhotoCamera, onClick = ::takePhoto),
         BottomSheetItem(title = "Remove current picture", icon = Icons.Outlined.Delete, onClick = ::removeCurrentPicture)
     )
@@ -233,7 +241,7 @@ fun AddSensor(onClose: () -> Unit) {
                     content = {
                         Spacer(modifier = Modifier.padding(16.dp))
                         Text(
-                            text = "Add an image of your Sensor/Plant",
+                            text = "Add an image of your Plant",
                             modifier = Modifier.fillMaxWidth(),
                             textAlign = TextAlign.Center,
                             fontWeight = FontWeight.Bold,
@@ -291,13 +299,14 @@ fun AddSensor(onClose: () -> Unit) {
                     )
                 }
                 Text(
-                    text = "Add Sensor",
+                    text = "Add Plant",
                     color = MaterialTheme.colors.primaryVariant,
                     fontWeight = FontWeight.Medium,
                     fontSize = 20.sp,
                     textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.height(20.dp))
+
                 Box(
                     modifier = Modifier.size(124.dp)
                         .clip(RoundedCornerShape(70.dp))
@@ -321,6 +330,7 @@ fun AddSensor(onClose: () -> Unit) {
                             contentScale = ContentScale.Crop
                         )
                     }
+
                     Box(
                         modifier = Modifier
                             .size(40.dp)
@@ -347,6 +357,7 @@ fun AddSensor(onClose: () -> Unit) {
                     }
                 }
                 Spacer(modifier = Modifier.height(25.dp))
+
                 Text(
                     text = "Give a name for your sensor:",
                     color = MaterialTheme.colors.primary,
@@ -356,15 +367,42 @@ fun AddSensor(onClose: () -> Unit) {
                 )
                 Spacer(modifier = Modifier.height(5.dp))
                 OutlinedTextField(
-                    value = sensorname,
-                    onValueChange = { sensorname = it },
+                    value = plantName,
+                    onValueChange = { plantName = it },
                     label = {
                         Text(
-                            text = "Sensor name",
+                            text = "Plant name",
                             color = MaterialTheme.colors.primaryVariant
                         )
                     },
-                    placeholder = { Text(text = "Enter a name for your sensor") },
+                    placeholder = { Text(text = "Enter a name for your plant") },
+                    singleLine = true,
+                    shape = RoundedCornerShape(1.dp),
+                    textStyle =
+                    TextStyle(
+                        color = MaterialTheme.colors.primary
+                    )
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Text(
+                    text = "Add a sensor to your plant:",
+                    color = MaterialTheme.colors.primary,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium,
+                    modifier = Modifier.align(Alignment.Start)
+                )
+                Spacer(modifier = Modifier.height(5.dp))
+                OutlinedTextField(
+                    value = pairedSensor,
+                    onValueChange = { pairedSensor = it },
+                    label = {
+                        Text(
+                            text = "Paired sensor",
+                            color = MaterialTheme.colors.primaryVariant
+                        )
+                    },
+                    placeholder = { Text(text = "Add the sensor name") },
                     singleLine = true,
                     shape = RoundedCornerShape(1.dp),
                     textStyle =
@@ -375,7 +413,7 @@ fun AddSensor(onClose: () -> Unit) {
                 Spacer(modifier = Modifier.height(20.dp))
                 Button(
                     onClick = {
-                        addSensor()
+                        addPlant()
                         onClose()
                        /*if (sensorname.isNotEmpty() && imageUri != null) {
                             if (currentUser != null) {
@@ -444,7 +482,7 @@ private fun isImage(uri: android.net.Uri, context: Context): Boolean {
 val storage = Firebase.storage
 val storageRef = storage.reference.child("sensorData")
 
-data class UserSensor(
+data class UserPlant(
     var sensorname: String,
     var imageUri: Uri?
 )
@@ -452,7 +490,7 @@ data class UserSensor(
 fun addUserSensor(sensorname: String, imageUri: Uri) {
     val userId = Firebase.auth.currentUser!!.uid
     val database = Firebase.database.reference
-    val userSensor = UserSensor(sensorname, imageUri)
+    val userSensor = UserPlant(sensorname, imageUri)
 
     // Upload the image to Cloud Storage
     val imageRef = storageRef.child("$userId/$sensorname.jpg")

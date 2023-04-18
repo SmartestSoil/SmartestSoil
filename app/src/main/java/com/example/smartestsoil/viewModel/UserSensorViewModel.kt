@@ -12,14 +12,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.io.ByteArrayInputStream
 import java.util.*
-
-class UserSensorViewModel: ViewModel() {
-    var sensors = mutableStateListOf<String>()
+/*
+class UserPlantViewModel: ViewModel() {
+    var plants = mutableStateListOf<String>()
         private set
 
     private val storageRef = Firebase.storage.reference
 
-    fun addSensor(sensorname: String, imageUri: Uri) {
+    fun addPlant(plantId:String,plantName: String, imageUri: Uri,pairedSensor:String) {
         viewModelScope.launch(Dispatchers.IO) {
             // Create a reference to the image file in Firebase Storage
             val imageRef = storageRef.child("images/${UUID.randomUUID()}")
@@ -34,9 +34,9 @@ class UserSensorViewModel: ViewModel() {
             // Wait for the upload to complete and get the download URL of the image
             val downloadUrl = uploadTask.await().storage.downloadUrl.await().toString()
 
-            // Store the sensor name and image download URL to Firestore
-            Firebase.firestore.collection("sensors")
-                .document(sensorname)
+            // Store the plant name and image download URL to Firestore
+            Firebase.firestore.collection("plants")
+                .document(plantName)
                 .set(hashMapOf("imageUri" to downloadUrl))
                 .addOnCompleteListener {  }
                 .addOnFailureListener { }
@@ -59,3 +59,4 @@ class UserSensorViewModel: ViewModel() {
         }
     }
 }
+*/
