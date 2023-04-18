@@ -1,6 +1,7 @@
 package com.example.smartestsoil.ui.screens
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.height
@@ -32,6 +33,8 @@ import coil.compose.rememberImagePainter
 import com.example.smartestsoil.model.PlantsFirestorePagingSource
 import com.example.smartestsoil.model.UserPlant
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -54,14 +57,16 @@ fun PlantListView(db: FirebaseFirestore){
         Dialog(
             onDismissRequest = { showDialog = false },
             content = {
-                AddSensor(onClose = { showDialog = false })
+                AddPlant(onClose = { showDialog = false })
             }
         )
     }
 
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     // LazyPagingItems
+
     val lazyPagingItems = remember {
+        val db = Firebase.firestore
         val source = PlantsFirestorePagingSource(db)
         val pager = Pager(config = pagingConfig, pagingSourceFactory = { source })
         pager.flow.cachedIn(lifecycle.coroutineScope)
@@ -83,10 +88,12 @@ fun PlantListView(db: FirebaseFirestore){
         },
         floatingActionButtonPosition = FabPosition.End,
     ){
-        LazyVerticalGrid(
+
+    LazyVerticalGrid(
             columns = GridCells.Adaptive(minSize = 100.dp),
             contentPadding = PaddingValues(24.dp),
             content = {
+                Log.d("MyApp", "itemCount: ${lazyPagingItems.itemCount}")
                 items(lazyPagingItems.itemCount) { index ->
                     val plant = lazyPagingItems[index]
                     if (plant != null) {
@@ -97,7 +104,8 @@ fun PlantListView(db: FirebaseFirestore){
             }
         )
     }
-}
+    }
+
 
 @Composable
 fun PlantCard(plant: UserPlant) {
@@ -128,12 +136,11 @@ fun PlantCard(plant: UserPlant) {
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = plant.plantName, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-
-
-
-
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = plant.pairedSensor, fontWeight = FontWeight.Bold, fontSize = 18.sp)
 
         }
-        Text(text = "what!!!!!", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+
     }
+
 }

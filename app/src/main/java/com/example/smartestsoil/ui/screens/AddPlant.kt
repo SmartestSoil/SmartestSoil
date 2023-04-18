@@ -2,7 +2,6 @@ package com.example.smartestsoil.ui.screens
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
@@ -29,7 +28,6 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
 import java.util.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -42,27 +40,24 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.style.TextAlign
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.smartestsoil.model.BottomSheetItem
-import com.example.smartestsoil.viewModel.UserSensorViewModel
-import com.google.android.material.bottomsheet.BottomSheetDialog
+
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.launch
-import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
-fun AddSensor(onClose: () -> Unit) {
+fun AddPlant(onClose: () -> Unit) {
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     //var imageData by remember { mutableStateOf<ByteArray?>(null) }
-    var plantName by remember { mutableStateOf("") }
-    var plantid =UUID.randomUUID()
     var pairedSensor by remember { mutableStateOf("") }
+    var plantId =UUID.randomUUID().toString()
+    var plantName by remember { mutableStateOf("") }
 
     //val userSensorViewModel: UserSensorViewModel = viewModel()
 
@@ -107,10 +102,11 @@ fun AddSensor(onClose: () -> Unit) {
                     storageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
                         // Store plant data to Firestore
                         val plantData = hashMapOf(
-                            "plantid" to plantid,
-                            "plantName" to plantName,
                             "imageUrl" to downloadUrl.toString(),
                             "pairedSensor" to pairedSensor,
+                            "plantId" to plantId,
+                            "plantName" to plantName,
+
                         )
 
                         firestoreDb.collection("plants")

@@ -1,29 +1,36 @@
 package com.example.smartestsoil.model
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
 
 data class UserPlant(
-    var plantid:String,
     var imageUrl: String,
+    var pairedSensor:String,
+    var plantId:String,
     var plantName:String,
-    var pairedSensor:String
-
-
 
     )
+
+
+
+
 class PlantsFirestorePagingSource(
-    private val db: FirebaseFirestore
+    private val db :FirebaseFirestore,
+
+
 ) : PagingSource<QuerySnapshot, UserPlant>() {
 
     override suspend fun load(params: LoadParams<QuerySnapshot>): LoadResult<QuerySnapshot, UserPlant> {
-        // Implementation of the load function
+
         return try {
             val currentPage = params.key ?: db.collection("plants")
-                .orderBy("plantid")
+                .orderBy("plantName")
                 .limit(params.loadSize.toLong())
                 .get()
                 .await()
@@ -31,7 +38,7 @@ class PlantsFirestorePagingSource(
             val lastDocumentSnapshot = currentPage.documents.lastOrNull()
             val nextPage = if (lastDocumentSnapshot != null) {
                 db.collection("plants")
-                    .orderBy("plantid")
+                    .orderBy("plantName")
                     .startAfter(lastDocumentSnapshot)
                     .limit(params.loadSize.toLong())
                     .get()
@@ -40,14 +47,17 @@ class PlantsFirestorePagingSource(
                 null
             }
 
-            val plantsList = currentPage.documents.map { documentSnapshot ->
-                val plantid = documentSnapshot.getString("plantid") ?: ""
-                val imageUrl = documentSnapshot.getString("imageUrl") ?: ""
-                val plantName = documentSnapshot.getString("plantName") ?: ""
-                val pairedSensor = documentSnapshot.getString("pairedSensor") ?: ""
+            val plantsList =
+                currentPage.documents.map { documentSnapshot ->
 
-                UserPlant(plantid,imageUrl, plantName,pairedSensor)
-            }
+                    val imageUrl = documentSnapshot.getString("imageUrl") ?: ""
+                    val pairedSensor = documentSnapshot.getString("pairedSensor") ?: ""
+                    val plantId = documentSnapshot.getString("plantId") ?: ""
+                    val plantName = documentSnapshot.getString("plantName") ?: ""
+                    UserPlant(imageUrl, pairedSensor, plantId, plantName)
+                }
+
+
 
             LoadResult.Page(
                 data = plantsList,

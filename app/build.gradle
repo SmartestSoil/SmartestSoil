@@ -80,6 +80,8 @@ dependencies {
     implementation "com.patrykandpatrick.vico:compose-m3:1.6.4"
     implementation 'androidx.room:room-common:2.5.0'
     implementation 'androidx.room:room-ktx:2.5.0'
+    implementation "io.coil-kt:coil-compose:1.4.0"
+
     implementation platform('com.google.firebase:firebase-bom:31.4.0')
     implementation 'com.google.firebase:firebase-database-ktx'
     testImplementation 'junit:junit:4.13.2'
