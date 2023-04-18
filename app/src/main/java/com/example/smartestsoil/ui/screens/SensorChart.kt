@@ -1,11 +1,13 @@
 package com.example.smartestsoil.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.smartestsoil.model.SensorData
 import com.patrykandpatrick.vico.compose.axis.horizontal.bottomAxis
@@ -13,12 +15,15 @@ import com.patrykandpatrick.vico.compose.axis.vertical.endAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.startAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
 import com.patrykandpatrick.vico.compose.chart.line.lineChart
+import com.patrykandpatrick.vico.core.chart.decoration.Decoration
+import com.patrykandpatrick.vico.core.chart.edges.FadingEdges
 import com.patrykandpatrick.vico.core.entry.FloatEntry
 import com.patrykandpatrick.vico.core.entry.entryModelOf
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+
 
 @Composable
 fun SensorChart(sensorData: List<SensorData>) {
@@ -48,11 +53,15 @@ fun SensorChart(sensorData: List<SensorData>) {
         Chart(
             chart = lineChart(spacing = 20.dp),
             model = chartEntryModel,
-            startAxis = startAxis(),
-            bottomAxis = bottomAxis(),
-            endAxis = endAxis(),
+           // startAxis = startAxis(),
+           // bottomAxis = bottomAxis(),
+           // endAxis = endAxis(),
             //marker = Marker,
             isZoomEnabled = true,
+          //  fadingEdges = FadingEdges.On(0.5f)
+            modifier= Modifier
+                .padding(16.dp) // Add some padding to the chart area
+
         )
     }
 }

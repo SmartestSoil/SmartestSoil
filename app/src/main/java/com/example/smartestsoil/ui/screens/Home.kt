@@ -1,5 +1,6 @@
 package com.example.smartestsoil.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -18,12 +19,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.smartestsoil.R
 import com.example.smartestsoil.model.PlantModel
 import com.example.smartestsoil.model.SensorData
 import com.example.smartestsoil.viewModel.PlantListViewModel
@@ -42,13 +45,15 @@ fun SensorList(sensordata: List<SensorData>) {
     val lastStoredMoistureValue = rememberSaveable { mutableStateOf("N/A") }
     val moistureValue = sensordata.lastOrNull()?.soil_moisture ?: lastStoredMoistureValue.value
 
-
+    val circleBackgroundColor = Color(0xFF95A178).copy(alpha = 0.5f)
+    val greenColor = Color(0xFF95A178)
     if (moistureValue != "N/A") {
         lastStoredMoistureValue.value = moistureValue.toString()
     }
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(Color.White)
             .padding(vertical = 60.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -56,17 +61,31 @@ fun SensorList(sensordata: List<SensorData>) {
             modifier = Modifier
                 .size(200.dp)
                 .clip(CircleShape)
-                .background(Color.LightGray),
+                .background(circleBackgroundColor),
             contentAlignment = Alignment.Center
         ) {
-            // Draw the moisture value
-            Text(
-                text = "$moistureValue%",
-                fontSize = 36.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
+            Image(
+                painter = painterResource(id = R.drawable.droplet_half),
+                contentDescription = "Droplet half",
+                modifier = Modifier
+                    .size(90.dp)
+                    .padding(bottom = 30.dp)
             )
+            // Draw the moisture value
+            Box(
+                modifier = Modifier
+                    .padding(top = 70.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "$moistureValue%",
+                    fontSize = 36.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = greenColor
+                )
+            }
         }
+
         Spacer(modifier = Modifier.height(32.dp)) // Add some space between the boxes
         Box(
             modifier = Modifier
