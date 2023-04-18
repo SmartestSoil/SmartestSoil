@@ -1,5 +1,6 @@
 package com.example.smartestsoil.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -38,10 +39,12 @@ import com.example.smartestsoil.viewModel.SensorViewModel
 fun Home(
     navController: NavController,
     sensorViewModel: SensorViewModel = viewModel()) {
-    SensorList(sensorViewModel.sensordata)
+    SensorList(sensorViewModel.sensordata, sensorViewModel.pairedSensor )
 }
 @Composable
-fun SensorList(sensordata: List<SensorData>) {
+fun SensorList(sensordata: List<SensorData>, pairedSensor: List<String>) {
+    val displaySensor = pairedSensor.firstOrNull().toString()
+    Log.d("in chart ","$ $displaySensor")
     val lastStoredMoistureValue = rememberSaveable { mutableStateOf("N/A") }
     val moistureValue = sensordata.lastOrNull()?.soil_moisture ?: lastStoredMoistureValue.value
 
@@ -93,7 +96,7 @@ fun SensorList(sensordata: List<SensorData>) {
                 .padding(horizontal = 30.dp),
             contentAlignment = Alignment.Center
         ) {
-             SensorChart(sensordata)
+             SensorChart(sensordata,displaySensor)
 
         }
         Spacer(modifier = Modifier.height(40.dp)) // Add some space between the boxes

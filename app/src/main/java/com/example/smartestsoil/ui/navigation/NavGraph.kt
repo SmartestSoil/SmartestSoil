@@ -51,7 +51,7 @@ private fun addPlantListView(
 ) {
     navGraphBuilder.composable(route = NavRoute.PlantListView.path) {
 
-        PlantListView(db= FirebaseFirestore.getInstance(), navController = navController)
+        PlantListView(db= FirebaseFirestore.getInstance(), navController = navController, viewModel())
     }
 }
 private fun addHome(
