@@ -15,7 +15,6 @@ class SensorViewModel : ViewModel() {
         private set
     init {
         getSensorDataList()
-
     }
     private fun getSensorDataList() {
         viewModelScope.launch {
@@ -29,11 +28,14 @@ class SensorViewModel : ViewModel() {
             }
         }
     }
-    fun setPairedSensor(sensor: String) {
-        pairedSensor.clear()
-        pairedSensor.add(sensor)
 
-        Log.d("in view model ","$pairedSensor")
+    companion object{
+        private var currentSensor: String? = ""
+        var CurrentSensor: String?
+            get() {
+                return currentSensor
+            }
+        set(value){currentSensor = value}
 
     }
 }

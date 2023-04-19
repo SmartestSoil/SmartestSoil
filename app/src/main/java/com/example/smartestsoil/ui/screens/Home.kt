@@ -39,12 +39,10 @@ import com.example.smartestsoil.viewModel.SensorViewModel
 fun Home(
     navController: NavController,
     sensorViewModel: SensorViewModel = viewModel()) {
-    SensorList(sensorViewModel.sensordata, sensorViewModel.pairedSensor )
+    SensorList(sensorViewModel.sensordata)
 }
 @Composable
-fun SensorList(sensordata: List<SensorData>, pairedSensor: List<String>) {
-    val displaySensor = pairedSensor.firstOrNull().toString()
-    Log.d("in chart ","$ $displaySensor")
+fun SensorList(sensordata: List<SensorData>) {
     val lastStoredMoistureValue = rememberSaveable { mutableStateOf("N/A") }
     val moistureValue = sensordata.lastOrNull()?.soil_moisture ?: lastStoredMoistureValue.value
 
@@ -96,7 +94,10 @@ fun SensorList(sensordata: List<SensorData>, pairedSensor: List<String>) {
                 .padding(horizontal = 30.dp),
             contentAlignment = Alignment.Center
         ) {
-             SensorChart(sensordata,displaySensor)
+            val curSensor = SensorViewModel.CurrentSensor
+            if (curSensor != null) {
+                SensorChart(sensordata,curSensor)
+            }
 
         }
         Spacer(modifier = Modifier.height(40.dp)) // Add some space between the boxes

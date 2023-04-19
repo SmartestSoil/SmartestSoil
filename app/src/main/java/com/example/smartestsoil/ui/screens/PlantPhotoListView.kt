@@ -100,11 +100,10 @@ fun PlantListView(db: FirebaseFirestore, navController: NavController, viewModel
                     val plant = lazyPagingItems[index]
                     if (plant != null) {
                         val pairedSensor =plant.pairedSensor
-                        viewModel.setPairedSensor(pairedSensor)
-                        Log.d("once clicked the val is ","$pairedSensor")
+                        SensorViewModel.CurrentSensor = pairedSensor
+                        Log.d("once clicked the val is ","$pairedSensor" )
                         PlantCard(plant, plant.pairedSensor) {
                             navController.navigate("home")
-                            //navController.navigate("home/$pairedSensor")
                         }
                     }
                 }

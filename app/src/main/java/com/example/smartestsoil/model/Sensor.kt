@@ -10,7 +10,7 @@ interface SensorApi {
     @GET("/api/data")
     suspend fun getSensorData(): List<SensorData>
     companion object {
-        var SensorDataService : SensorApi? = null
+        private var SensorDataService : SensorApi? = null
         fun getInstance() : SensorApi {
             if (SensorDataService === null) {
                 SensorDataService = Retrofit.Builder()
