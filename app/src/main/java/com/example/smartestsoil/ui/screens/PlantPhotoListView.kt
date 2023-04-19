@@ -99,12 +99,14 @@ fun PlantListView(db: FirebaseFirestore, navController: NavController, viewModel
                 items(lazyPagingItems.itemCount) { index ->
                     val plant = lazyPagingItems[index]
                     if (plant != null) {
-                        val pairedSensor =plant.pairedSensor
-                        SensorViewModel.CurrentSensor = pairedSensor
-                        Log.d("once clicked the val is ","$pairedSensor" )
-                        PlantCard(plant, plant.pairedSensor) {
+                        PlantCard(plant, plant.pairedSensor) { clickedPlant ->
+                            Log.d("PlantListView", "Clicked Plant: ${clickedPlant.plantName}")
+                            val clickedPairedSensor = clickedPlant.pairedSensor
+                            SensorViewModel.CurrentSensor = clickedPairedSensor
+                            Log.d("PlantListView", "Clicked Paired Sensor: $clickedPairedSensor")
                             navController.navigate("home")
                         }
+
                     }
                 }
 
@@ -115,33 +117,34 @@ fun PlantListView(db: FirebaseFirestore, navController: NavController, viewModel
 
 
 @Composable
-fun PlantCard(plant: UserPlant,pairedSensor: String, onClick: (UserPlant) -> Unit) {
+fun PlantCard(plant: UserPlant,pairedSensor: String,  onClick: (UserPlant) -> Unit) {
     Card(
         shape = RoundedCornerShape(1.dp),
         border = BorderStroke(0.dp, color = Color.Transparent),
         modifier = Modifier
             .height(180.dp)
             .width(140.dp)
-            .clickable(onClick = {onClick(plant)}),
+            .clickable(onClick = {onClick(plant)} ),
         elevation = 0.dp,
         backgroundColor = Color.Transparent
     ) {
         Column( modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally) {
-            Image(
+            Box(modifier = Modifier
+                .size(64.dp)
+                .clip(CircleShape)
+            ) {
+                Image(
                 painter = rememberImagePainter(
                     data = plant.imageUrl,
                     builder = {
                         crossfade(true)
                     }
                 ),
-                contentDescription = plant.plantName,
-
-                modifier = Modifier
-                    .size(64.dp)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop,
-            )
+                    contentDescription = plant.plantName,
+                    contentScale = ContentScale.Crop,
+                )
+            }
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = plant.plantName, fontWeight = FontWeight.Bold, fontSize = 18.sp)
             Spacer(modifier = Modifier.height(8.dp))
