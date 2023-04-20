@@ -5,15 +5,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.smartestsoil.model.SensorApi
 import com.example.smartestsoil.model.SensorData
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 
 class SensorViewModel : ViewModel() {
     var sensordata = mutableListOf<SensorData>()
         private set
-
+    var pairedSensor = mutableListOf<String>()
+        private set
     init {
         getSensorDataList()
-
     }
     private fun getSensorDataList() {
         viewModelScope.launch {
@@ -26,5 +27,15 @@ class SensorViewModel : ViewModel() {
                 Log.d("SENSORVIEWMODEL", e.message.toString())
             }
         }
+    }
+
+    companion object{
+        private var currentSensor: String? = ""
+        var CurrentSensor: String?
+            get() {
+                return currentSensor
+            }
+        set(value){currentSensor = value}
+
     }
 }

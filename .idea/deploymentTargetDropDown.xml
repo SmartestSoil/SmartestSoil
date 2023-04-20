@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="deploymentTargetDropDown">
+    <targetSelectedWithDropDown>
+      <Target>
+        <type value="QUICK_BOOT_TARGET" />
+        <deviceKey>
+          <Key>
+            <type value="VIRTUAL_DEVICE_PATH" />
+<<<<<<< HEAD
+            <value value="C:\Users\mufid\.android\avd\Nexus_9_API_33.avd" />
+=======
+            <value value="$USER_HOME$/.android/avd/pixel_5_-_api_33.avd" />
+>>>>>>> c38e242ebbf4276291e04af6137e821e762f7d4f
+          </Key>
+        </deviceKey>
+      </Target>
+    </targetSelectedWithDropDown>
+<<<<<<< HEAD
+    <timeTargetWasSelectedWithDropDown value="2023-04-18T08:18:05.613183700Z" />
+=======
+    <timeTargetWasSelectedWithDropDown value="2023-04-17T19:57:05.815440Z" />
+>>>>>>> c38e242ebbf4276291e04af6137e821e762f7d4f
+  </component>
+</project>

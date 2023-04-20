@@ -14,10 +14,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.smartestsoil.model.UserSensor
+import com.example.smartestsoil.model.UserPlant
 
 @Composable
-fun NotesButton(sensor: UserSensor) {
+fun NotesButton(plant: UserPlant) {
     var showNoteDialog = remember { mutableStateOf(false) }
 
     Card(
@@ -48,6 +48,6 @@ fun NotesButton(sensor: UserSensor) {
         }
     }
     if (showNoteDialog.value) {
-        NotesDialog(sensor, showNoteDialog)
+        NotesDialog(plant, showNoteDialog)
     }
 }
