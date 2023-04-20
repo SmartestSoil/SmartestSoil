@@ -43,8 +43,15 @@ fun Home(
 }
 @Composable
 fun SensorList(sensordata: List<SensorData>) {
+    val curSensor = SensorViewModel.CurrentSensor
     val lastStoredMoistureValue = rememberSaveable { mutableStateOf("N/A") }
-    val moistureValue = sensordata.lastOrNull()?.soil_moisture ?: lastStoredMoistureValue.value
+    val moistureValue = sensordata.filter { sensorData ->
+        when (curSensor) {
+            "sensor1" -> sensorData.sensor_id == "soil_sensor_001"
+            "sensor2" -> sensorData.sensor_id == "soil_sensor_002"
+            else -> true // include all sensors if curSensor is not sensor1 or sensor2
+        }
+    }.lastOrNull()?.soil_moisture ?: lastStoredMoistureValue.value
 
     val circleBackgroundColor = Color(0xFF95A178).copy(alpha = 0.5f)
     val greenColor = Color(0xFF95A178)
@@ -94,7 +101,7 @@ fun SensorList(sensordata: List<SensorData>) {
                 .padding(horizontal = 30.dp),
             contentAlignment = Alignment.Center
         ) {
-            val curSensor = SensorViewModel.CurrentSensor
+
             if (curSensor != null) {
                 SensorChart(sensordata,curSensor)
             }
