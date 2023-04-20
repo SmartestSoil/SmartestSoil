@@ -14,6 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 
 data class UserSensor(
+    var userId: String = "",
     var imageUrl: String = "",
     var sensorName:String = "",
     var notes: List<Note> = emptyList()

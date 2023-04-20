@@ -12,6 +12,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -25,7 +26,9 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -50,6 +53,7 @@ fun NotesDialog(
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = FocusRequester()
     val context = LocalContext.current
+    time = CurrentDateTime()
 
     fun getNotes() {
         Firebase.firestore.collection("sensors")
@@ -82,7 +86,22 @@ fun NotesDialog(
             }
     }
 
+    fun deleteNote(note: Note) {
+        val newNotes = sensor.notes.filter { it != note }
+        Firebase.firestore.collection("sensors")
+            .document(sensor.sensorName)
+            .update("notes", newNotes)
+            .addOnCompleteListener {
+                getNotes()
+                Toast.makeText(context, "Note deleted successfully", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(context, "Error deleting note: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
     getNotes()
+
     Dialog(
         onDismissRequest = { showNoteDialog.value = false }
     ) {
@@ -128,49 +147,87 @@ fun NotesDialog(
             }
             for (sensorNote in sensor.notes) {
                 Surface(
-                    modifier = Modifier.padding(10.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
                     color = MaterialTheme.colors.secondary
                 ) {
-                    Column {
-                        Row(modifier = Modifier.fillMaxWidth()) {
+                    Column (
+                        modifier = Modifier.padding(7.dp)
+                    ){
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
                             Text(
                                 text = sensorNote.title,
                                 color = MaterialTheme.colors.primaryVariant,
-                                fontWeight = FontWeight.Medium
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 18.sp
                             )
                             Text(
                                 text = sensorNote.time,
                                 color = MaterialTheme.colors.primaryVariant,
                                 fontWeight = FontWeight.Medium
                             )
-                            IconButton(onClick = { /* TODO */ }) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Edit,
-                                    contentDescription = "Edit note",
-                                    tint = MaterialTheme.colors.primaryVariant,
-                                )
-                            }
                         }
-                        Row() {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
                             Text(
                                 text = sensorNote.note,
-                                color = MaterialTheme.colors.primaryVariant
+                                color = MaterialTheme.colors.primaryVariant,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(end = 5.dp)
                             )
+                            Box(
+                                modifier = Modifier
+                                    .wrapContentWidth()
+                                    .padding(end = 8.dp)
+                            ) {
+                                Row(
+                                    horizontalArrangement = Arrangement.End
+                                ) {
+                                    IconButton(onClick = { /* TODO */ }) {
+                                        Icon(
+                                            imageVector = Icons.Outlined.Edit,
+                                            contentDescription = "Edit note",
+                                            tint = MaterialTheme.colors.onPrimary,
+                                        )
+                                    }
+                                    IconButton(onClick = { deleteNote(sensorNote) }) {
+                                        Icon(
+                                            imageVector = Icons.Outlined.Delete,
+                                            contentDescription = "Delete note",
+                                            tint = MaterialTheme.colors.onPrimary,
+                                        )
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }
-            Row() {
+            Spacer(modifier = Modifier.height(15.dp))
+            Row(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Text(
                     text = "Add a new note",
-                    color = MaterialTheme.colors.primaryVariant
+                    color = MaterialTheme.colors.primaryVariant,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 18.sp
                 )
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.TopEnd
-                ) {
-                    time = CurrentDateTime()
-                }
+                Text(
+                    text = CurrentDateTime(),
+                    color = MaterialTheme.colors.primaryVariant,
+                    fontSize = 18.sp
+                )
             }
             Surface(
                 modifier = Modifier.padding(10.dp),
@@ -193,7 +250,8 @@ fun NotesDialog(
                         shape = RoundedCornerShape(1.dp),
                         keyboardOptions = KeyboardOptions(
                             imeAction = ImeAction.Next,
-                            keyboardType = KeyboardType.Text
+                            keyboardType = KeyboardType.Text,
+                            capitalization = KeyboardCapitalization.Words
                         ),
                         keyboardActions = KeyboardActions(
                             onNext = { focusRequester.requestFocus() }
@@ -228,7 +286,7 @@ fun NotesDialog(
                     )
                 }
             }
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(5.dp))
             Box(
                 modifier = Modifier
                     .padding(10.dp)
