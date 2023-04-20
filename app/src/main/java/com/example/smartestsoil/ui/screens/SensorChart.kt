@@ -36,8 +36,6 @@ fun SensorChart(sensorData: List<SensorData>, displaySensor: String) {
         .maxOrNull()
 
     val todaysData = sensorData.filter { sensorData ->
-        Log.d("Filtering", "sensorData.sensor_id: ${sensorData.sensor_id}, displaySensor: $displaySensor")
-
         val timestampDateTime = OffsetDateTime.parse(sensorData.timestamp, dateFormatter)
         val timestampDateUtc = timestampDateTime.toInstant().atZone(ZoneId.of("UTC")).toLocalDate()
 
@@ -46,13 +44,8 @@ fun SensorChart(sensorData: List<SensorData>, displaySensor: String) {
             "sensor2" -> sensorData.sensor_id == "soil_sensor_002"
             else -> false // handle other cases if needed
         }
-
-        Log.d("Filtering", "isMatchingSensor: $isMatchingSensor, timestampDateUtc: $timestampDateUtc, latestDateUtc: $latestDateUtc")
-
         isMatchingSensor && (timestampDateUtc == latestDateUtc)
-
     }
-    Log.d("comparaison time", "is ${LocalDate.now(ZoneOffset.UTC)}")
 
     val temperatureEntries = todaysData.mapIndexed { index, sensorData ->
         FloatEntry(index.toFloat(), sensorData.soil_temperature)

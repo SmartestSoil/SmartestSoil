@@ -20,7 +20,7 @@ data class UserPlant(
 
 
 
-class PlantsFirestorePagingSource(
+class PlantsFireStorePagingSource(
     private val db :FirebaseFirestore,
 
 

@@ -11,14 +11,14 @@ import kotlinx.coroutines.launch
 class SensorViewModel : ViewModel() {
     var sensordata = mutableListOf<SensorData>()
         private set
-    var pairedSensor = mutableListOf<String>()
-        private set
+
     init {
         getSensorDataList()
     }
+
     private fun getSensorDataList() {
         viewModelScope.launch {
-            var sensorApi : SensorApi? =null
+            var sensorApi: SensorApi? = null
             try {
                 sensorApi = SensorApi!!.getInstance()
                 sensordata.clear()
@@ -29,13 +29,24 @@ class SensorViewModel : ViewModel() {
         }
     }
 
-    companion object{
+    companion object {
         private var currentSensor: String? = ""
         var CurrentSensor: String?
             get() {
                 return currentSensor
             }
-        set(value){currentSensor = value}
+            set(value) {
+                currentSensor = value
+            }
+        private var currentPlantId: String? = ""
+        var CurrentPlantId: String?
+            get() {
+                return currentPlantId
+            }
+            set(value) {
+                currentPlantId = value
+                Log.d("in vm"," $currentPlantId")
+            }
 
     }
 }

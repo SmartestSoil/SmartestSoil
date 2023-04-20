@@ -16,7 +16,7 @@ fun BottomNav(navController: NavController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    if (currentRoute == null || currentRoute == NavRoute.Authentication.path) {
+    if (currentRoute == null || currentRoute == NavRoute.Authentication.path || currentRoute == NavRoute.Home.path ) {
         return
     }
 

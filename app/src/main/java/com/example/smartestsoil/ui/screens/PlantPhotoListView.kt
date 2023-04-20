@@ -32,7 +32,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.rememberImagePainter
-import com.example.smartestsoil.model.PlantsFirestorePagingSource
+import com.example.smartestsoil.model.PlantsFireStorePagingSource
 import com.example.smartestsoil.model.UserPlant
 import com.example.smartestsoil.viewModel.SensorViewModel
 import com.google.firebase.firestore.FirebaseFirestore
@@ -41,7 +41,7 @@ import com.google.firebase.ktx.Firebase
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun PlantListView(db: FirebaseFirestore, navController: NavController, viewModel: SensorViewModel){
+fun PlantListView(navController: NavController, viewModel: SensorViewModel){
     // Paging configuration
     val pagingConfig = PagingConfig(
         pageSize = 10,
@@ -69,7 +69,7 @@ fun PlantListView(db: FirebaseFirestore, navController: NavController, viewModel
 
     val lazyPagingItems = remember {
         val db = Firebase.firestore
-        val source = PlantsFirestorePagingSource(db)
+        val source = PlantsFireStorePagingSource(db)
         val pager = Pager(config = pagingConfig, pagingSourceFactory = { source })
         pager.flow.cachedIn(lifecycle.coroutineScope)
     }.collectAsLazyPagingItems()
@@ -91,29 +91,30 @@ fun PlantListView(db: FirebaseFirestore, navController: NavController, viewModel
         floatingActionButtonPosition = FabPosition.End,
     ){
 
-    LazyVerticalGrid(
-            columns = GridCells.Adaptive(minSize = 100.dp),
-            contentPadding = PaddingValues(24.dp),
-            content = {
-                Log.d("MyApp", "itemCount: ${lazyPagingItems.itemCount}")
-                items(lazyPagingItems.itemCount) { index ->
-                    val plant = lazyPagingItems[index]
-                    if (plant != null) {
-                        PlantCard(plant, plant.pairedSensor) { clickedPlant ->
-                            Log.d("PlantListView", "Clicked Plant: ${clickedPlant.plantName}")
-                            val clickedPairedSensor = clickedPlant.pairedSensor
-                            SensorViewModel.CurrentSensor = clickedPairedSensor
-                            Log.d("PlantListView", "Clicked Paired Sensor: $clickedPairedSensor")
-                            navController.navigate("home")
+        LazyVerticalGrid(
+                columns = GridCells.Adaptive(minSize = 100.dp),
+                contentPadding = PaddingValues(24.dp),
+                content = {
+                    Log.d("MyApp", "itemCount: ${lazyPagingItems.itemCount}")
+                    items(lazyPagingItems.itemCount) { index ->
+                        val plant = lazyPagingItems[index]
+                        if (plant != null) {
+                            PlantCard(plant, plant.pairedSensor) { clickedPlant ->
+                                Log.d("PlantListView", "Clicked Plant: ${clickedPlant.plantName}")
+                                val clickedPairedSensor = clickedPlant.pairedSensor
+                                val clickedPantId = clickedPlant.plantId
+                                SensorViewModel.CurrentSensor = clickedPairedSensor
+                                SensorViewModel.CurrentPlantId = clickedPantId
+                                navController.navigate("home")
+                            }
+
                         }
-
                     }
-                }
 
-            }
+                }
         )
     }
-    }
+}
 
 
 @Composable
