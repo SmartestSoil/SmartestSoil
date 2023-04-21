@@ -18,4 +18,10 @@ class PlantListViewModel : ViewModel() {
         }
         return plantList[category] ?: emptyList()
     }
+    fun getPlantByName(context: Context, plantName: String): PlantModel? {
+        if (plantList.isEmpty()) {
+            plantList = PlantsLibrary.getPlantList(context)
+        }
+        return plantList.values.flatten().find { it.plantName == plantName }
+    }
 }

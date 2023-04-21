@@ -60,7 +60,7 @@ private fun addHome(
 ) {
     navGraphBuilder.composable(route = NavRoute.Home.path) {
 
-        Home(navController = navController,db= FirebaseFirestore.getInstance() )
+        Home(navController = navController)
     }
 }
 private fun addDetails(
