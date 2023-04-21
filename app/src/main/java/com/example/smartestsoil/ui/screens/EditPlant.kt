@@ -2,12 +2,11 @@ package com.example.smartestsoil.ui.screens
 
 import android.util.Log
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -93,6 +92,53 @@ fun editPlantDetails(
                             .height(48.dp)
                     ) {
                         Text("Save")
+                    }
+
+                    Button(
+                        onClick = { onClose() },
+                        modifier = Modifier
+                            .width(120.dp)
+                            .height(48.dp)
+                    ) {
+                        Text("Cancel")
+                    }
+                }
+            }
+        }
+    }
+}
+@Composable
+fun DeletePlantDialog(showDeleteDialog:MutableState<Boolean> = remember { mutableStateOf(true) }, onDelete: () -> Unit, onClose: () -> Unit) {
+    if (showDeleteDialog.value) {
+        Dialog(onDismissRequest = { showDeleteDialog.value = false }) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "Are you sure you want to delete this plant?",
+                    fontWeight = FontWeight.Light,
+                    fontSize = 24.sp
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Button(
+                        onClick = {
+                            onDelete(/**/)
+                        },
+                        modifier = Modifier
+                            .width(120.dp)
+                            .height(48.dp)
+                    ) {
+                        Text("Delete")
                     }
 
                     Button(

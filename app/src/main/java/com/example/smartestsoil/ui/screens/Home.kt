@@ -8,8 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -46,11 +45,7 @@ import com.example.smartestsoil.model.UserPlant
 import com.example.smartestsoil.ui.screens.authentication.TemperatureScale
 import com.example.smartestsoil.viewModel.PlantListViewModel
 import com.example.smartestsoil.viewModel.SensorViewModel
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.toObject
-import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.tasks.await
+
 
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -58,7 +53,9 @@ import kotlinx.coroutines.tasks.await
 fun Home(
     navController: NavController,
     sensorViewModel: SensorViewModel = viewModel()) {
-    var showDialog by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false)}
+    var showDeleteDialog by remember { mutableStateOf(false)}
+
     Scaffold(bottomBar = {
         BottomAppBar(
             backgroundColor = MaterialTheme.colors.primary,
@@ -71,9 +68,7 @@ fun Home(
                 Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
             }
             IconButton(
-                onClick = {
-                    showDialog = true
-                },
+                onClick = { showDialog = true },
                 modifier = Modifier.weight(1f)
             ) {
                 Icon(Icons.Filled.Edit, contentDescription = "Edit")
@@ -87,18 +82,31 @@ fun Home(
                 )
             }
             IconButton(
-                onClick = { /* Handle delete button click */ },
+                onClick = { showDeleteDialog = true },
                 modifier = Modifier.weight(1f)
             ) {
                 Icon(Icons.Filled.Delete, contentDescription = "Delete")
             }
+            if(showDeleteDialog) {
+                DeletePlantDialog(
+                    showDeleteDialog= remember { mutableStateOf(showDeleteDialog)},
+                    onDelete = {  /* handle onSave logic */ },
+                    onClose = { showDeleteDialog = false })
+                }
         }
     }) {
-        SensorList(sensorViewModel.sensordata)
+        SensorList(sensorViewModel.sensordata,  viewModel = viewModel(), plantName="Peace Lily" )
        }
 }
 @Composable
-fun SensorList(sensordata: List<SensorData>) {
+fun SensorList(sensordata: List<SensorData>, viewModel: PlantListViewModel, plantName: String) {
+    val context = LocalContext.current
+    val plant = viewModel.getPlantByName(context, plantName)
+    val minMoisture = plant?.suitableMoisture?.min ?: 20
+    val maxMoisture = plant?.suitableMoisture?.max ?: 50
+    val minTemperature = plant?.suitableTemperature?.min ?: 5
+    val maxTemperature = plant?.suitableTemperature?.max ?: 40
+    Log.d("data for lib","$minMoisture,$maxMoisture, $minTemperature, $maxTemperature " )
     val curSensor = SensorViewModel.CurrentSensor
     val lastStoredMoistureValue = rememberSaveable { mutableStateOf("N/A") }
     val moistureValue = sensordata.filter { sensorData ->
@@ -188,7 +196,7 @@ fun SensorList(sensordata: List<SensorData>) {
                     modifier = Modifier.fillMaxSize()
                 )*/
 
-                PlantListScreen("Peace Lily")
+                PlantListScreen(plantName)
             }
 
 

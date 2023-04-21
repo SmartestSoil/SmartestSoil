@@ -35,7 +35,6 @@ import coil.compose.rememberImagePainter
 import com.example.smartestsoil.model.PlantsFireStorePagingSource
 import com.example.smartestsoil.model.UserPlant
 import com.example.smartestsoil.viewModel.SensorViewModel
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 

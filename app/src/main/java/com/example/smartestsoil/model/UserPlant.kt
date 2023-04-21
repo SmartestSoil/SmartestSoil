@@ -1,13 +1,10 @@
 package com.example.smartestsoil.model
 
-import android.content.ContentValues.TAG
-import android.util.Log
+
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
 
 data class UserPlant(

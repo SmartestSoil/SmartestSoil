@@ -24,4 +24,5 @@ class PlantListViewModel : ViewModel() {
         }
         return plantList.values.flatten().find { it.plantName == plantName }
     }
+
 }
