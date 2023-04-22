@@ -67,55 +67,87 @@ fun PlantListView(db: FirebaseFirestore, navController: NavController, viewModel
         )
     }
 
-    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    val isUserLoggedIn = remember { mutableStateOf(false) }
     val user = Firebase.auth.currentUser
-    val userId = user?.uid ?: throw Exception("User is not logged in")
-    val lazyPagingItems = remember {
-        val db = Firebase.firestore
-        val source = PlantsFirestorePagingSource(db, userId)
-        val pager = Pager(config = pagingConfig, pagingSourceFactory = { source })
-        pager.flow.cachedIn(lifecycle.coroutineScope)
-    }.collectAsLazyPagingItems()
+    user?.let { isUserLoggedIn.value = true }
 
-    Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(
-                shape = CircleShape,
-                onClick = { onFABClick() },
-                modifier = Modifier.absolutePadding(bottom = 50.dp) // set bottom padding to move FAB on top of bottom nav bar
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = "Add FAB",
-                    tint = MaterialTheme.colors.onPrimary
-                )
-            }
-        },
-        floatingActionButtonPosition = FabPosition.End,
-    ){
+    if (isUserLoggedIn.value) {
+        // user is logged in, get the user ID here
+        val lifecycle = LocalLifecycleOwner.current.lifecycle
+        val userId = user?.uid ?: throw Exception("User ID not found")
+        // the rest of your code that uses the userId
+        val lazyPagingItems = remember {
+            val db = Firebase.firestore
+            val source = PlantsFirestorePagingSource(db, userId)
+            val pager = Pager(config = pagingConfig, pagingSourceFactory = { source })
+            pager.flow.cachedIn(lifecycle.coroutineScope)
+        }.collectAsLazyPagingItems()
 
-    LazyVerticalGrid(
-            columns = GridCells.Adaptive(minSize = 100.dp),
-            contentPadding = PaddingValues(24.dp),
-            content = {
-                Log.d("MyApp", "itemCount: ${lazyPagingItems.itemCount}")
-                items(lazyPagingItems.itemCount) { index ->
-                    val plant = lazyPagingItems[index]
-                    if (plant != null) {
-                        PlantCard(plant, plant.pairedSensor) { clickedPlant ->
-                            Log.d("PlantListView", "Clicked Plant: ${clickedPlant.plantName}")
-                            val clickedPairedSensor = clickedPlant.pairedSensor
-                            SensorViewModel.CurrentSensor = clickedPairedSensor
-                            Log.d("PlantListView", "Clicked Paired Sensor: $clickedPairedSensor")
-                            navController.navigate("home")
-                        }
-
-                    }
+        Scaffold(
+            floatingActionButton = {
+                FloatingActionButton(
+                    shape = CircleShape,
+                    onClick = { onFABClick() },
+                    modifier = Modifier.absolutePadding(bottom = 50.dp) // set bottom padding to move FAB on top of bottom nav bar
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Add,
+                        contentDescription = "Add FAB",
+                        tint = MaterialTheme.colors.onPrimary
+                    )
                 }
+            },
+            floatingActionButtonPosition = FabPosition.End,
+        ){
 
-            }
-        )
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(minSize = 100.dp),
+                contentPadding = PaddingValues(24.dp),
+                content = {
+                    Log.d("MyApp", "itemCount: ${lazyPagingItems.itemCount}")
+                    items(lazyPagingItems.itemCount) { index ->
+                        val plant = lazyPagingItems[index]
+                        if (plant != null) {
+                            PlantCard(plant, plant.pairedSensor) { clickedPlant ->
+                                Log.d("PlantListView", "Clicked Plant: ${clickedPlant.plantName}")
+                                val clickedPairedSensor = clickedPlant.pairedSensor
+                                SensorViewModel.CurrentSensor = clickedPairedSensor
+                                Log.d("PlantListView", "Clicked Paired Sensor: $clickedPairedSensor")
+                                navController.navigate("home")
+                            }
+
+                        }
+                    }
+
+                }
+            )
+        }
+    } else {
+        // user is not logged in, show login screen or do something else
+        Scaffold(
+            floatingActionButton = {
+                FloatingActionButton(
+                    shape = CircleShape,
+                    onClick = { onFABClick() },
+                    modifier = Modifier.absolutePadding(bottom = 50.dp) // set bottom padding to move FAB on top of bottom nav bar
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Add,
+                        contentDescription = "Add FAB",
+                        tint = MaterialTheme.colors.onPrimary
+                    )
+                }
+            },
+            floatingActionButtonPosition = FabPosition.End,
+        ) {
+            CircularProgressIndicator(color = MaterialTheme.colors.onPrimary)
+        }
     }
+
+    //val user = Firebase.auth.currentUser
+    //val userId = user?.uid ?: throw Exception("User is not logged in")
+
+
     }
 
 

@@ -53,6 +53,7 @@ import java.io.ByteArrayOutputStream
 @Composable
 fun AddPlant(onClose: () -> Unit) {
     var imageUri by remember { mutableStateOf<Uri?>(null) }
+    val defaultImageUri = Uri.parse("android.resource://com.example.smartestsoil/drawable/logo_without_text_300")
     //var imageData by remember { mutableStateOf<ByteArray?>(null) }
     var pairedSensor by remember { mutableStateOf("") }
     var plantId =UUID.randomUUID().toString()
@@ -62,8 +63,8 @@ fun AddPlant(onClose: () -> Unit) {
 
     val context = LocalContext.current
     val userId = Firebase.auth.currentUser?.uid
-    val currentUser = FirebaseAuth.getInstance().currentUser!!.uid
-    var userName = FirebaseAuth.getInstance().currentUser!!.displayName
+    //val currentUser = FirebaseAuth.getInstance().currentUser!!.uid
+    //var userName = FirebaseAuth.getInstance().currentUser!!.displayName
     val keyboardController = LocalSoftwareKeyboardController.current
     val coroutineScope = rememberCoroutineScope()
 
@@ -81,6 +82,10 @@ fun AddPlant(onClose: () -> Unit) {
             Toast.makeText(context, "You must be logged in to add a plant", Toast.LENGTH_SHORT)
                 .show()
             return
+        }
+
+        if (imageUri == null) {
+            imageUri = defaultImageUri
         }
 
         // Check if sensor name is empty
@@ -385,49 +390,3 @@ fun AddPlant(onClose: () -> Unit) {
         }
     }
 }
-
-/*
-private fun uploadImage(uri: android.net.Uri, storageRef: StorageReference, context: Context) {
-    val imageRef = storageRef.child("images/${UUID.randomUUID()}")
-    imageRef.putFile(uri).addOnSuccessListener {
-        imageRef.downloadUrl.addOnSuccessListener { url ->
-            Log.d("***", url.toString())
-            Toast.makeText(context, "Image uploaded successfully", Toast.LENGTH_SHORT).show()
-        }
-            .addOnFailureListener{
-                Log.e("***", it.message.toString())
-            }
-    }
-}
-
-private fun isImage(uri: android.net.Uri, context: Context): Boolean {
-    val contentTypeResolver = context.contentResolver
-    val type = contentTypeResolver.getType(uri)
-    return type?.startsWith("image/") == true
-}
-
-val storage = Firebase.storage
-val storageRef = storage.reference.child("sensorData")
-
-data class UserPlant(
-    var sensorname: String,
-    var imageUri: Uri?
-)
-
-fun addUserSensor(sensorname: String, imageUri: Uri) {
-    val userId = Firebase.auth.currentUser!!.uid
-    val database = Firebase.database.reference
-    val userSensor = UserPlant(sensorname, imageUri)
-
-    // Upload the image to Cloud Storage
-    val imageRef = storageRef.child("$userId/$sensorname.jpg")
-    val uploadTask = imageRef.putFile(imageUri)
-    uploadTask.addOnSuccessListener {
-        // Get the download URL of the uploaded image
-        imageRef.downloadUrl.addOnSuccessListener { downloadUri ->
-            // Save the sensor data (including the image URL) to the Realtime Database
-            userSensor.imageUri = downloadUri
-            database.child("sensorData").child(userId).setValue(userSensor)
-        }
-    }
-}*/
