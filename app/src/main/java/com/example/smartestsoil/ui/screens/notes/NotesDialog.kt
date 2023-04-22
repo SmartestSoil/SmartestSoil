@@ -28,13 +28,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.smartestsoil.model.CurrentDateTime
 import com.example.smartestsoil.model.Note
-import com.example.smartestsoil.model.UserSensor
+import com.example.smartestsoil.model.UserPlant
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
@@ -43,7 +42,7 @@ import com.google.firebase.ktx.Firebase
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun NotesDialog(
-    sensor: UserSensor,
+    plant: UserPlant,
     showNoteDialog: MutableState<Boolean>
 ) {
     var note by remember { mutableStateOf("") }
@@ -56,12 +55,12 @@ fun NotesDialog(
     time = CurrentDateTime()
 
     fun getNotes() {
-        Firebase.firestore.collection("sensors")
-            .document(sensor.sensorName)
+        Firebase.firestore.collection("plants")
+            .document(plant.plantName)
             .get()
             .addOnSuccessListener { document ->
-                val notes = document.toObject<UserSensor>()?.notes ?: emptyList()
-                sensor.notes = notes
+                val notes = document.toObject<UserPlant>()?.notes ?: emptyList()
+                plant.notes = notes
             }
             .addOnFailureListener { e ->
                 Toast.makeText(context, "Error getting notes: ${e.message}", Toast.LENGTH_SHORT)
@@ -75,8 +74,8 @@ fun NotesDialog(
             time = time
         )
 
-        Firebase.firestore.collection("sensors")
-            .document(sensor.sensorName)
+        Firebase.firestore.collection("plants")
+            .document(plant.plantName)
             .update("notes", FieldValue.arrayUnion(newNote))
             .addOnCompleteListener {
                 Toast.makeText(context, "Note added successfully", Toast.LENGTH_SHORT).show()
@@ -87,9 +86,9 @@ fun NotesDialog(
     }
 
     fun deleteNote(note: Note) {
-        val newNotes = sensor.notes.filter { it != note }
-        Firebase.firestore.collection("sensors")
-            .document(sensor.sensorName)
+        val newNotes = plant.notes.filter { it != note }
+        Firebase.firestore.collection("plants")
+            .document(plant.plantName)
             .update("notes", newNotes)
             .addOnCompleteListener {
                 getNotes()
@@ -139,13 +138,13 @@ fun NotesDialog(
                     fontSize = 20.sp
                 )
                 Text(
-                    text = sensor.sensorName,
+                    text = plant.plantName,
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colors.primaryVariant,
                     fontSize = 20.sp,
                 )
             }
-            for (sensorNote in sensor.notes) {
+            for (plantNote in plant.notes) {
                 Surface(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -160,13 +159,13 @@ fun NotesDialog(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = sensorNote.title,
+                                text = plantNote.title,
                                 color = MaterialTheme.colors.primaryVariant,
                                 fontWeight = FontWeight.Medium,
                                 fontSize = 18.sp
                             )
                             Text(
-                                text = sensorNote.time,
+                                text = plantNote.time,
                                 color = MaterialTheme.colors.primaryVariant,
                                 fontWeight = FontWeight.Medium
                             )
@@ -176,7 +175,7 @@ fun NotesDialog(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = sensorNote.note,
+                                text = plantNote.note,
                                 color = MaterialTheme.colors.primaryVariant,
                                 modifier = Modifier
                                     .weight(1f)
@@ -197,7 +196,7 @@ fun NotesDialog(
                                             tint = MaterialTheme.colors.onPrimary,
                                         )
                                     }
-                                    IconButton(onClick = { deleteNote(sensorNote) }) {
+                                    IconButton(onClick = { deleteNote(plantNote) }) {
                                         Icon(
                                             imageVector = Icons.Outlined.Delete,
                                             contentDescription = "Delete note",

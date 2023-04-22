@@ -36,6 +36,7 @@ import com.example.smartestsoil.ui.screens.notes.NotesButton
 import com.example.smartestsoil.model.PlantsFirestorePagingSource
 import com.example.smartestsoil.model.UserPlant
 import com.example.smartestsoil.viewModel.SensorViewModel
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -67,10 +68,11 @@ fun PlantListView(db: FirebaseFirestore, navController: NavController, viewModel
     }
 
     val lifecycle = LocalLifecycleOwner.current.lifecycle
-
+    val user = Firebase.auth.currentUser
+    val userId = user?.uid ?: throw Exception("User is not logged in")
     val lazyPagingItems = remember {
         val db = Firebase.firestore
-        val source = PlantsFirestorePagingSource(db)
+        val source = PlantsFirestorePagingSource(db, userId)
         val pager = Pager(config = pagingConfig, pagingSourceFactory = { source })
         pager.flow.cachedIn(lifecycle.coroutineScope)
     }.collectAsLazyPagingItems()

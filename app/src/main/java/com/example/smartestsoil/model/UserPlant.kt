@@ -25,14 +25,9 @@ data class Note(
     val time: String = ""
 )
 
-
-
-
-
-
 class PlantsFirestorePagingSource(
     private val db :FirebaseFirestore,
-
+    private val userId: String
 
 ) : PagingSource<QuerySnapshot, UserPlant>() {
 
@@ -40,6 +35,7 @@ class PlantsFirestorePagingSource(
 
         return try {
             val currentPage = params.key ?: db.collection("plants")
+                .whereEqualTo("userId", userId)
                 .orderBy("plantName")
                 .limit(params.loadSize.toLong())
                 .get()
@@ -48,6 +44,7 @@ class PlantsFirestorePagingSource(
             val lastDocumentSnapshot = currentPage.documents.lastOrNull()
             val nextPage = if (lastDocumentSnapshot != null) {
                 db.collection("plants")
+                    .whereEqualTo("userId", userId)
                     .orderBy("plantName")
                     .startAfter(lastDocumentSnapshot)
                     .limit(params.loadSize.toLong())
