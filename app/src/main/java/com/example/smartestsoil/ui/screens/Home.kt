@@ -76,8 +76,9 @@ fun Home(
 
             if (showDialog) {
                 editPlantDetails(
-                    onClose = { showDialog = false },
-                    onSave = { updatedPlant -> sensorViewModel.setPlantO(updatedPlant) },
+                    onClose = { showDialog = false},
+                    onSave = { updatedPlant -> sensorViewModel.setPlantO(updatedPlant)
+                        navController.navigate("plantlist")},
                     showDialog = remember { mutableStateOf(showDialog)}
                 )
             }
