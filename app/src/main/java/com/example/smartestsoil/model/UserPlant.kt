@@ -1,10 +1,13 @@
 package com.example.smartestsoil.model
 
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
 
 data class UserPlant(
@@ -27,6 +30,7 @@ class PlantsFireStorePagingSource(
     override suspend fun load(params: LoadParams<QuerySnapshot>): LoadResult<QuerySnapshot, UserPlant> {
 
         return try {
+
             val currentPage = params.key ?: db.collection("plants")
                 .orderBy("plantName")
                 .limit(params.loadSize.toLong())
@@ -65,7 +69,9 @@ class PlantsFireStorePagingSource(
         } catch (e: Exception) {
             LoadResult.Error(e)
         }
+
     }
+
 
     override fun getRefreshKey(state: PagingState<QuerySnapshot, UserPlant>): QuerySnapshot? {
         // Implementation of the getRefreshKey function

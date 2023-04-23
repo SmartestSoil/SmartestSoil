@@ -11,8 +11,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.smartestsoil.model.UserPlant
 import com.example.smartestsoil.viewModel.SensorViewModel
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.tasks.await
+
 
 @Composable
 fun editPlantDetails(
@@ -21,9 +26,10 @@ fun editPlantDetails(
     showDialog: MutableState<Boolean> = remember { mutableStateOf(true) }
 ) {
     val currentId = SensorViewModel.CurrentPlantId
-    Log.d("current screen plant ID", "$currentId")
-    var plantData by remember { mutableStateOf<UserPlant?>(null) }
+    var plant =  SensorViewModel.CurrentPlant
+    Log.d("current screen plant ID", "$currentId; plant=${plant.toString()}")
 
+    var plantData by remember { mutableStateOf<UserPlant?>(plant) }
     var plantName by remember { mutableStateOf(plantData?.plantName ?: "") }
     var imageUrl by remember { mutableStateOf(plantData?.imageUrl ?: "") }
     var pairedSensor by remember { mutableStateOf(plantData?.pairedSensor ?: "") }
@@ -86,6 +92,7 @@ fun editPlantDetails(
                                 pairedSensor = pairedSensor
                             )
                             onSave(updatedPlant)
+                            onClose()
                         },
                         modifier = Modifier
                             .width(120.dp)
@@ -108,7 +115,8 @@ fun editPlantDetails(
     }
 }
 @Composable
-fun DeletePlantDialog(showDeleteDialog:MutableState<Boolean> = remember { mutableStateOf(true) }, onDelete: () -> Unit, onClose: () -> Unit) {
+fun DeletePlantDialog(showDeleteDialog:MutableState<Boolean> = remember { mutableStateOf(true) }, onDelete: (plantId: String) -> Unit, onClose: () -> Unit) {
+    var plantId = SensorViewModel.CurrentPlantId
     if (showDeleteDialog.value) {
         Dialog(onDismissRequest = { showDeleteDialog.value = false }) {
             Column(
@@ -132,7 +140,9 @@ fun DeletePlantDialog(showDeleteDialog:MutableState<Boolean> = remember { mutabl
                 ) {
                     Button(
                         onClick = {
-                            onDelete(/**/)
+                            if (plantId != null) {
+                                onDelete(plantId)
+                            }
                         },
                         modifier = Modifier
                             .width(120.dp)

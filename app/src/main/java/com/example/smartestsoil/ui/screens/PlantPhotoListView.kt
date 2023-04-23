@@ -104,6 +104,7 @@ fun PlantListView(navController: NavController, viewModel: SensorViewModel){
                                 val clickedPantId = clickedPlant.plantId
                                 SensorViewModel.CurrentSensor = clickedPairedSensor
                                 SensorViewModel.CurrentPlantId = clickedPantId
+                                viewModel.getPlantO(SensorViewModel.CurrentPlantId!!)
                                 navController.navigate("home")
                             }
 

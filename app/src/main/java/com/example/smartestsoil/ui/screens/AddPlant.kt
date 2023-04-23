@@ -109,7 +109,7 @@ fun AddPlant(onClose: () -> Unit) {
                         )
 
                         firestoreDb.collection("plants")
-                            .document(plantName)
+                            .document(plantId)
                             .set(plantData)
                             .addOnSuccessListener {
                                 // Plant data stored successfully, show success message

@@ -77,7 +77,7 @@ fun Home(
             if (showDialog) {
                 editPlantDetails(
                     onClose = { showDialog = false },
-                    onSave = { updatedPlant -> /* handle onSave logic */ },
+                    onSave = { updatedPlant -> sensorViewModel.setPlantO(updatedPlant) },
                     showDialog = remember { mutableStateOf(showDialog)}
                 )
             }
@@ -90,7 +90,8 @@ fun Home(
             if(showDeleteDialog) {
                 DeletePlantDialog(
                     showDeleteDialog= remember { mutableStateOf(showDeleteDialog)},
-                    onDelete = {  /* handle onSave logic */ },
+                    onDelete = { deletedPlant -> sensorViewModel.deletePlantO(deletedPlant)
+                        navController.navigate("plantlist")}, //  plantId -> sensorViewModel.deletePlantO(plantId)
                     onClose = { showDeleteDialog = false })
                 }
         }
