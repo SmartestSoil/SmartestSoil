@@ -100,6 +100,7 @@ fun PlantListView(navController: NavController, viewModel: SensorViewModel){
                         if (plant != null) {
                             PlantCard(plant, plant.pairedSensor) { clickedPlant ->
                                 Log.d("PlantListView", "Clicked Plant: ${clickedPlant.plantName}")
+                                val clickedPlantName = clickedPlant.plantName
                                 val clickedPairedSensor = clickedPlant.pairedSensor
                                 val clickedPantId = clickedPlant.plantId
                                 SensorViewModel.CurrentSensor = clickedPairedSensor

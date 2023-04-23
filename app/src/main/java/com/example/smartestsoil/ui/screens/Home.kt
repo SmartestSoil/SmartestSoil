@@ -96,13 +96,14 @@ fun Home(
                 }
         }
     }) {
-        SensorList(sensorViewModel.sensordata,  viewModel = viewModel(), plantName="Peace Lily" )
+        SensorList(sensorViewModel.sensordata,  viewModel = viewModel())
        }
 }
 @Composable
-fun SensorList(sensordata: List<SensorData>, viewModel: PlantListViewModel, plantName: String) {
+fun SensorList(sensordata: List<SensorData>, viewModel: PlantListViewModel) {
     val context = LocalContext.current
-    val plant = viewModel.getPlantByName(context, plantName)
+    val currentPlantName = SensorViewModel.CurrentPlant?.plantName?: ""
+    val plant = viewModel.getPlantByName(context, currentPlantName) //( from plant lib (json) VM)
     val minMoisture = plant?.suitableMoisture?.min ?: 20
     val maxMoisture = plant?.suitableMoisture?.max ?: 50
     val minTemperature = plant?.suitableTemperature?.min ?: 5
@@ -197,7 +198,7 @@ fun SensorList(sensordata: List<SensorData>, viewModel: PlantListViewModel, plan
                     modifier = Modifier.fillMaxSize()
                 )*/
 
-                PlantListScreen(plantName)
+                PlantListScreen(currentPlantName)
             }
 
 

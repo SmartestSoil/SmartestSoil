@@ -133,5 +133,6 @@ class SensorViewModel : ViewModel() {
             set(value) {
                 currentPlantId = value
             }
+
     }
 }
