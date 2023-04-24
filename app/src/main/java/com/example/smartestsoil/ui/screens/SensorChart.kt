@@ -33,6 +33,7 @@ fun SensorChart(sensorData: List<SensorData>, displaySensor: String) {
         val isMatchingSensor = when (displaySensor) {
             "sensor1" -> sensorData.sensor_id == "soil_sensor_001"
             "sensor2" -> sensorData.sensor_id == "soil_sensor_002"
+            "sensor3" -> sensorData.sensor_id == "soil_sensor_003"
             else -> false // handle other cases if needed
         }
         isMatchingSensor && (timestampDateUtc == latestDateUtc)

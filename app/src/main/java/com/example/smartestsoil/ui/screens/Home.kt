@@ -2,10 +2,7 @@ package com.example.smartestsoil.ui.screens
 
 import android.annotation.SuppressLint
 import android.util.Log
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 
@@ -23,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.platform.LocalContext
@@ -45,7 +43,11 @@ import com.example.smartestsoil.model.UserPlant
 import com.example.smartestsoil.ui.screens.authentication.TemperatureScale
 import com.example.smartestsoil.viewModel.PlantListViewModel
 import com.example.smartestsoil.viewModel.SensorViewModel
-
+import java.lang.Math.round
+import kotlin.math.roundToInt
+import androidx.compose.animation.core.*
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -116,21 +118,45 @@ fun SensorList(sensordata: List<SensorData>, viewModel: PlantListViewModel) {
         when (curSensor) {
             "sensor1" -> sensorData.sensor_id == "soil_sensor_001"
             "sensor2" -> sensorData.sensor_id == "soil_sensor_002"
+            "sensor3" -> sensorData.sensor_id == "soil_sensor_003"
             else -> true // include all sensors if curSensor is not sensor1 or sensor2
         }
     }.lastOrNull()?.soil_moisture ?: lastStoredMoistureValue.value
+    val roundedMoistureValue = (moistureValue as? Float)?.toInt()
+
+    if (roundedMoistureValue != null && roundedMoistureValue.toString() != "N/A") {
+        lastStoredMoistureValue.value = roundedMoistureValue.toString()
+    }
 
     val circleBackgroundColor = Color(0xFF95A178).copy(alpha = 0.5f)
     val greenColor = Color(0xFF95A178)
-    if (moistureValue != "N/A") {
-        lastStoredMoistureValue.value = moistureValue.toString()
+
+    //traffic light colors
+    val redColor = Color(0xFFCC0000)
+    val orangeColor = Color(0xFFFFA500)
+    val greenColor2 = Color(0xFF70853D)
+    val moistureDifference = when {
+        roundedMoistureValue == null -> null
+        roundedMoistureValue < minMoisture -> roundedMoistureValue - minMoisture
+        roundedMoistureValue > maxMoisture -> roundedMoistureValue - maxMoisture
+        else -> 0
     }
+    val circleOutlineColor = when {
+        moistureDifference != null && moistureDifference <= -10 -> redColor
+        moistureDifference != null && moistureDifference >= 10 -> redColor
+        else -> greenColor.copy(alpha = 0.5f)
+    }
+    if (moistureDifference != null && moistureDifference in -9..9) {
+        circleOutlineColor.copy(alpha = 0.5f)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
             .padding(vertical = 60.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         Box(
             modifier = Modifier
@@ -139,27 +165,41 @@ fun SensorList(sensordata: List<SensorData>, viewModel: PlantListViewModel) {
                 .background(circleBackgroundColor),
             contentAlignment = Alignment.Center
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.droplet_half),
-                contentDescription = "Droplet half",
-                modifier = Modifier
-                    .size(90.dp)
-                    .padding(bottom = 30.dp)
-            )
-            // Draw the moisture value
             Box(
                 modifier = Modifier
-                    .padding(top = 70.dp),
-                contentAlignment = Alignment.Center
+                    .size(220.dp)
+                    .clip(CircleShape)
+                    .background(circleOutlineColor.copy(alpha = 0.0f))
+                    .border(
+                        width = 10.dp,
+                        brush = SolidColor(circleOutlineColor),
+                        shape = CircleShape
+                    )
+            )
+
+            Column(
+                modifier = Modifier,
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Image(
+                    painter = painterResource(id = R.drawable.droplet_half),
+                    contentDescription = "Droplet half",
+                    modifier = Modifier
+                        .size(70.dp)
+                )
+
+                Spacer(modifier = Modifier.height(10.dp))
+
                 Text(
-                    text = "$moistureValue%",
+                    text = "$roundedMoistureValue%",
                     fontSize = 36.sp,
                     fontWeight = FontWeight.Bold,
                     color = greenColor
                 )
-            }
+
         }
+    }
 
         Spacer(modifier = Modifier.height(32.dp)) // Add some space between the boxes
         Box(
@@ -236,6 +276,7 @@ fun SensorList(sensordata: List<SensorData>, viewModel: PlantListViewModel) {
 
 
     }
+
 }
 /*@Composable
 fun PlantList(viewModel: PlantListViewModel = viewModel()) {
