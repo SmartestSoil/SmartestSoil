@@ -53,12 +53,10 @@ import java.io.ByteArrayOutputStream
 @Composable
 fun AddPlant(onClose: () -> Unit) {
     var imageUri by remember { mutableStateOf<Uri?>(null) }
-    //var imageData by remember { mutableStateOf<ByteArray?>(null) }
+    val defaultImageUri = Uri.parse("android.resource://com.example.smartestsoil/drawable/logo_without_text_300")
     var pairedSensor by remember { mutableStateOf("") }
     var plantId =UUID.randomUUID().toString()
     var plantName by remember { mutableStateOf("") }
-
-    //val userSensorViewModel: UserSensorViewModel = viewModel()
 
     val context = LocalContext.current
     val userId = Firebase.auth.currentUser?.uid
@@ -87,6 +85,11 @@ fun AddPlant(onClose: () -> Unit) {
             // Sensor name is empty, show error message
             Toast.makeText(context, "Please enter a plant name", Toast.LENGTH_SHORT).show()
             return
+        }
+
+        // If user did not select or take an image, set it to default
+        if (imageUri == null) {
+            imageUri = defaultImageUri
         }
 
         // Create a unique filename for the image
@@ -129,48 +132,6 @@ fun AddPlant(onClose: () -> Unit) {
         }
     }
 
-                /*
-        // Check if image is selected
-        if (imageUri == null) {
-            // Image is not selected, show error message
-            Toast.makeText(context, "Please select an image", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        // Create a unique filename for the image
-        val filename = "${UUID.randomUUID()}.jpg"
-
-        // Upload image to Firebase Storage
-        val imagesRef = storageRef.child("$filename")
-        imagesRef.putFile(imageUri!!)
-            .addOnSuccessListener {
-                // Image upload successful, get the download URL
-                imagesRef.downloadUrl.addOnSuccessListener { downloadUrl ->
-                    // Store sensor data to Firestore
-                    val sensorData = hashMapOf(
-                        "sensorName" to sensorname,
-                        "imageUrl" to downloadUrl.toString()
-                    )
-                    firestoreDb.collection("sensors")
-                        .document(sensorname)
-                        .set(sensorData)
-                        .addOnSuccessListener {
-                            // Sensor data stored successfully, show success message
-                            Toast.makeText(context, "Sensor added successfully", Toast.LENGTH_SHORT).show()
-                            onClose()
-                        }
-                        .addOnFailureListener { e ->
-                            // Sensor data storage failed, show error message
-                            Toast.makeText(context, "Error adding sensor: ${e.message}", Toast.LENGTH_SHORT).show()
-                        }
-                }
-            }
-            .addOnFailureListener { e ->
-                // Image upload failed, show error message
-                Toast.makeText(context, "Error uploading image: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
-    }
-*/
     fun bitmapToByteArray(bitmap: Bitmap?): ByteArray {
         val stream = ByteArrayOutputStream()
         bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, stream)
@@ -180,9 +141,6 @@ fun AddPlant(onClose: () -> Unit) {
     val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
             imageUri = it
-
-            /*val bitmap = context.contentResolver?.openInputStream(it)?.use { stream -> BitmapFactory.decodeStream(stream) }
-            imageData = bitmapToByteArray(bitmap)*/
         }
     }
 
@@ -196,10 +154,7 @@ fun AddPlant(onClose: () -> Unit) {
                     imageUri = uri
                 }
             }
-        //imageData = byteArray
     }
-
-
 
     fun takePhoto() {
         cameraLauncher.launch(null)
@@ -212,14 +167,14 @@ fun AddPlant(onClose: () -> Unit) {
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
     )
+
     fun chooseFromLibrary() {
         launcher.launch("image/*")
         coroutineScope.launch {
             bottomSheetScaffoldState.bottomSheetState.collapse()
         }
-
-
     }
+
     val bottomSheetItems = listOf(
         BottomSheetItem(title = "Choose from library", icon = Icons.Outlined.PhotoLibrary, onClick = ::chooseFromLibrary, ),
         BottomSheetItem(title = "Take photo", icon = Icons.Outlined.PhotoCamera, onClick = ::takePhoto),
@@ -414,33 +369,6 @@ fun AddPlant(onClose: () -> Unit) {
                     onClick = {
                         addPlant()
                         onClose()
-                       /*if (sensorname.isNotEmpty() && imageUri != null) {
-                            if (currentUser != null) {
-                                val userId = currentUser.uid
-                                val storageRef = FirebaseStorage.getInstance().reference
-                                currentUser.getIdToken(true)
-                                    .addOnCompleteListener { task ->
-                                        if (task.isSuccessful) {
-                                            val token = task.result?.token
-                                            // Do something with the token
-                                        } else {
-                                            // Show an error toast
-                                            Toast.makeText(context, "Failed to get token: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
-                                        }
-                                    }
-                            } else {
-                                Toast.makeText(context, "User is not signed in", Toast.LENGTH_SHORT).show()
-                            }
-                            addSensor()
-                            onClose()
-                            Toast.makeText(context, "Sensorname and image successfully added to Firebase", Toast.LENGTH_SHORT).show()
-                        } else {
-                            Toast.makeText(
-                                context,
-                                "Please provide a name and an image for your sensor",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }*/
                     },
                     colors = ButtonDefaults.buttonColors(
                         disabledBackgroundColor = MaterialTheme.colors.primary,
@@ -457,49 +385,3 @@ fun AddPlant(onClose: () -> Unit) {
         }
     }
 }
-
-/*
-private fun uploadImage(uri: android.net.Uri, storageRef: StorageReference, context: Context) {
-    val imageRef = storageRef.child("images/${UUID.randomUUID()}")
-    imageRef.putFile(uri).addOnSuccessListener {
-        imageRef.downloadUrl.addOnSuccessListener { url ->
-            Log.d("***", url.toString())
-            Toast.makeText(context, "Image uploaded successfully", Toast.LENGTH_SHORT).show()
-        }
-            .addOnFailureListener{
-                Log.e("***", it.message.toString())
-            }
-    }
-}
-
-private fun isImage(uri: android.net.Uri, context: Context): Boolean {
-    val contentTypeResolver = context.contentResolver
-    val type = contentTypeResolver.getType(uri)
-    return type?.startsWith("image/") == true
-}
-
-val storage = Firebase.storage
-val storageRef = storage.reference.child("sensorData")
-
-data class UserPlant(
-    var sensorname: String,
-    var imageUri: Uri?
-)
-
-fun addUserSensor(sensorname: String, imageUri: Uri) {
-    val userId = Firebase.auth.currentUser!!.uid
-    val database = Firebase.database.reference
-    val userSensor = UserPlant(sensorname, imageUri)
-
-    // Upload the image to Cloud Storage
-    val imageRef = storageRef.child("$userId/$sensorname.jpg")
-    val uploadTask = imageRef.putFile(imageUri)
-    uploadTask.addOnSuccessListener {
-        // Get the download URL of the uploaded image
-        imageRef.downloadUrl.addOnSuccessListener { downloadUri ->
-            // Save the sensor data (including the image URL) to the Realtime Database
-            userSensor.imageUri = downloadUri
-            database.child("sensorData").child(userId).setValue(userSensor)
-        }
-    }
-}*/

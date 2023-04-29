@@ -2,6 +2,8 @@ package com.example.smartestsoil.ui.screens
 
 import android.accounts.Account
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -38,7 +40,9 @@ fun Account(navController: NavController, userEmail: String) {
     }
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .verticalScroll(state = rememberScrollState())
+            .fillMaxSize(),
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Top
     ) {
