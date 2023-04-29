@@ -27,7 +27,7 @@ fun NavGraph(modifier: Modifier = Modifier, navController: NavHostController) {
         startDestination = NavRoute.Authentication.path
     ) {
         addAuthentication(navController, this)
-
+        addFeeds(navController, this)
         addPlantListView(navController, this)
         addHome(navController, this)
         addAccount(navController, this)
@@ -61,6 +61,16 @@ private fun addHome(
     navGraphBuilder.composable(route = NavRoute.Home.path) {
 
         Home(navController = navController)
+    }
+}
+
+private fun addFeeds(
+    navController: NavController,
+    navGraphBuilder: NavGraphBuilder
+) {
+    navGraphBuilder.composable(route = NavRoute.Feeds.path) {
+
+        FeedScreen(navController = navController )
     }
 }
 private fun addDetails(

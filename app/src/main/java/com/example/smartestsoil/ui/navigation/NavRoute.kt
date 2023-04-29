@@ -3,7 +3,7 @@ package com.example.smartestsoil.ui.navigation
 sealed class NavRoute(val path: String) {
 
     object Authentication: NavRoute("authentication")
-
+    object Feeds: NavRoute("feeds")
     object PlantListView: NavRoute("plantlist")
     object Home: NavRoute("home")
     object Account: NavRoute("account")
