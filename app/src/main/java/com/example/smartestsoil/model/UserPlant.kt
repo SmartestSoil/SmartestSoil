@@ -15,15 +15,17 @@ data class UserPlant(
     var pairedSensor:String,
     var plantId:String,
     var plantName:String,
+    var notes: List<Note> = emptyList()
+)
 
-    )
-
-
-
+data class Note(
+    val title: String = "",
+    val note: String = "",
+    val time: String = ""
+)
 
 class PlantsFireStorePagingSource(
     private val db :FirebaseFirestore,
-
 
 ) : PagingSource<QuerySnapshot, UserPlant>() {
 

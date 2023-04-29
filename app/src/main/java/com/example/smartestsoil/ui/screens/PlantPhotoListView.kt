@@ -34,6 +34,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.rememberImagePainter
 import com.example.smartestsoil.model.PlantsFireStorePagingSource
 import com.example.smartestsoil.model.UserPlant
+import com.example.smartestsoil.ui.screens.notes.NotesButton
 import com.example.smartestsoil.viewModel.SensorViewModel
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -89,7 +90,6 @@ fun PlantListView(navController: NavController, viewModel: SensorViewModel){
         },
         floatingActionButtonPosition = FabPosition.End,
     ){
-
         LazyVerticalGrid(
                 columns = GridCells.Adaptive(minSize = 100.dp),
                 contentPadding = PaddingValues(24.dp),
@@ -119,7 +119,7 @@ fun PlantListView(navController: NavController, viewModel: SensorViewModel){
 
 
 @Composable
-fun PlantCard(plant: UserPlant,pairedSensor: String,  onClick: (UserPlant) -> Unit) {
+fun PlantCard(plant: UserPlant, pairedSensor: String, onClick: (UserPlant) -> Unit) {
     Card(
         shape = RoundedCornerShape(1.dp),
         border = BorderStroke(0.dp, color = Color.Transparent),
@@ -151,8 +151,8 @@ fun PlantCard(plant: UserPlant,pairedSensor: String,  onClick: (UserPlant) -> Un
             Text(text = plant.plantName, fontWeight = FontWeight.Bold, fontSize = 18.sp)
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = plant.pairedSensor, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-
+            Spacer(modifier = Modifier.height(4.dp))
+            NotesButton(plant = plant)
         }
-
     }
 }
