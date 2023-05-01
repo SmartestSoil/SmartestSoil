@@ -40,10 +40,15 @@ Our app is designed for plant enthusiasts to monitor soil moisture and pH levels
 
 
 ## Tools used in the project
+-  Project Management: GitHub Kanban Board
 -  UI design tool: [**Figma**](https://www.figma.com/)
 -  Code editor: [**Android Studio**](https://code.visualstudio.com/)
 -  Database design tool:
 -  Version control: [**Git**](https://git-scm.com/) **&** [**GitHub**](https://github.com/)
+
+## Kanban Board
+
+We used Kanban to manage the project. You can view our Kanban board [here](https://github.com/orgs/SmartestSoil/projects/1/views/1). The board provides an overview of the project's progress, including tasks that have been completed, tasks that are in progress, and tasks that are yet to be started.
 
 ## The architecture of the application
 
