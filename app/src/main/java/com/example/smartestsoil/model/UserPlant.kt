@@ -15,6 +15,7 @@ data class UserPlant(
     var pairedSensor:String,
     var plantId:String,
     var plantName:String,
+    var userId: String,
     var notes: List<Note> = emptyList()
 )
 
@@ -58,7 +59,8 @@ class PlantsFireStorePagingSource(
                     val pairedSensor = documentSnapshot.getString("pairedSensor") ?: ""
                     val plantId = documentSnapshot.getString("plantId") ?: ""
                     val plantName = documentSnapshot.getString("plantName") ?: ""
-                    UserPlant(imageUrl, pairedSensor, plantId, plantName)
+                    val userId = documentSnapshot.getString("userId") ?: ""
+                    UserPlant(imageUrl, pairedSensor, plantId, plantName, userId)
                 }
 
 

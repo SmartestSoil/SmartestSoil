@@ -22,8 +22,8 @@ fun BottomNav(navController: NavController) {
 
     val items = listOf(
         TabItem("News Feed", Icons.Filled.Newspaper,"feeds"),
-        TabItem("My plants", Icons.Filled.List,"plantlist"),
-        TabItem("Detail", Icons.Filled.LocationOn,"detail"),
+        TabItem("My plants", Icons.Filled.Eco,"plantlist"),
+        TabItem("Detail", Icons.Filled.Explore,"detail"),
     )
     var selectedItem by remember { mutableStateOf(0) }
     BottomNavigation() {

@@ -14,6 +14,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.smartestsoil.model.UserPlant
 import com.example.smartestsoil.viewModel.SensorViewModel
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
@@ -27,6 +28,7 @@ fun editPlantDetails(
 ) {
     val currentId = SensorViewModel.CurrentPlantId
     var plant =  SensorViewModel.CurrentPlant
+    val user = FirebaseAuth.getInstance().currentUser
     Log.d("current screen plant ID", "$currentId; plant=${plant.toString()}")
 
     var plantData by remember { mutableStateOf<UserPlant?>(plant) }
@@ -34,6 +36,7 @@ fun editPlantDetails(
     var imageUrl by remember { mutableStateOf(plantData?.imageUrl ?: "") }
     var pairedSensor by remember { mutableStateOf(plantData?.pairedSensor ?: "") }
     var plantId by remember { mutableStateOf(plantData?.plantId ?: "") }
+    var userId by remember { mutableStateOf(plantData?.userId ?: "") }
 
     if (showDialog.value) {
         Dialog(onDismissRequest = { showDialog.value = false }) {
@@ -89,7 +92,8 @@ fun editPlantDetails(
                                 plantId = plantId,
                                 plantName = plantName,
                                 imageUrl = imageUrl,
-                                pairedSensor = pairedSensor
+                                pairedSensor = pairedSensor,
+                                userId = (user?.uid).toString()
                             )
                             onSave(updatedPlant)
                             onClose()

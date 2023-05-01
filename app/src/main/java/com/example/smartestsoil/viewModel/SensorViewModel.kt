@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.smartestsoil.model.SensorApi
 import com.example.smartestsoil.model.SensorData
 import com.example.smartestsoil.model.UserPlant
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.patrykandpatrick.vico.core.extension.setFieldValue
@@ -57,7 +58,7 @@ class SensorViewModel : ViewModel() {
         val db = Firebase.firestore
         val plants = db.collection("plants")
         val plantCol = plants.whereEqualTo("plantId", plant.plantId).get().await()
-        if(plantCol.count() == 1){
+        if(plantCol.count() == 1 ) {
             var thePlant = plantCol.documents[0].reference
             thePlant.update(mapOf("plantName" to plant.plantName,
                                   "pairedSensor" to plant.pairedSensor,
@@ -91,8 +92,9 @@ class SensorViewModel : ViewModel() {
                 val url = firstPlant.get("imageUrl") ?: "no image"
                 val pSen = firstPlant.get("pairedSensor") ?: ""
                 val name = firstPlant.get("plantName") ?: "no plant"
+                val uId = firstPlant.get("userId") ?: "no user"
                 Log.d(TAG, "Fetched plant data: $plantId")
-                return UserPlant(url as String, pSen as String, plantId, name as String)
+                return UserPlant(url as String, pSen as String, plantId, name as String, uId as String)
 
             } else {
                 // Log when the document does not exist

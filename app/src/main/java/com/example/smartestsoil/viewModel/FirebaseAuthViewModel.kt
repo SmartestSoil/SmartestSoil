@@ -97,13 +97,13 @@ class FirebaseAuthViewModel: ViewModel() {
             try {
                 val authResult = if (authenticationMode == AuthenticationMode.SIGN_IN) {
                     Firebase.auth.signInWithEmailAndPassword(email, password).await()
-                    //user.value = Firebase.auth.currentUser
+                    user.value = Firebase.auth.currentUser
                 } else {
                     Firebase.auth.createUserWithEmailAndPassword(email, password).await()
-                    //user.value = Firebase.auth.currentUser
+                    user.value = Firebase.auth.currentUser
                 }
                 withContext(Dispatchers.Main) {
-                    user.value = authResult.user
+                    //user.value = authResult.user
                     uiState.value = uiState.value.copy(
                         isLoading = false,
                         error = null

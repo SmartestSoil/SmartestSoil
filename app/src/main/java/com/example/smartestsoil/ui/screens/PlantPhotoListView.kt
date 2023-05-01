@@ -36,6 +36,7 @@ import com.example.smartestsoil.model.PlantsFireStorePagingSource
 import com.example.smartestsoil.model.UserPlant
 import com.example.smartestsoil.ui.screens.notes.NotesButton
 import com.example.smartestsoil.viewModel.SensorViewModel
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -120,39 +121,42 @@ fun PlantListView(navController: NavController, viewModel: SensorViewModel){
 
 @Composable
 fun PlantCard(plant: UserPlant, pairedSensor: String, onClick: (UserPlant) -> Unit) {
-    Card(
-        shape = RoundedCornerShape(1.dp),
-        border = BorderStroke(0.dp, color = Color.Transparent),
-        modifier = Modifier
-            .height(180.dp)
-            .width(140.dp)
-            .clickable(onClick = {onClick(plant)} ),
-        elevation = 0.dp,
-        backgroundColor = Color.Transparent
-    ) {
-        Column( modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally) {
-            Box(modifier = Modifier
-                .size(64.dp)
-                .clip(CircleShape)
-            ) {
-                Image(
-                painter = rememberImagePainter(
-                    data = plant.imageUrl,
-                    builder = {
-                        crossfade(true)
-                    }
-                ),
-                    contentDescription = plant.plantName,
-                    contentScale = ContentScale.Crop,
-                )
+    val user = FirebaseAuth.getInstance().currentUser
+    if (plant.userId == user?.uid) {
+        Card(
+            shape = RoundedCornerShape(1.dp),
+            border = BorderStroke(0.dp, color = Color.Transparent),
+            modifier = Modifier
+                .height(180.dp)
+                .width(140.dp)
+                .clickable(onClick = {onClick(plant)} ),
+            elevation = 0.dp,
+            backgroundColor = Color.Transparent
+        ) {
+            Column( modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally) {
+                Box(modifier = Modifier
+                    .size(64.dp)
+                    .clip(CircleShape)
+                ) {
+                    Image(
+                    painter = rememberImagePainter(
+                        data = plant.imageUrl,
+                        builder = {
+                            crossfade(true)
+                        }
+                    ),
+                        contentDescription = plant.plantName,
+                        contentScale = ContentScale.Crop,
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(text = plant.plantName, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(text = plant.pairedSensor, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                Spacer(modifier = Modifier.height(4.dp))
+                NotesButton(plant = plant)
             }
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = plant.plantName, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = plant.pairedSensor, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-            Spacer(modifier = Modifier.height(4.dp))
-            NotesButton(plant = plant)
         }
     }
 }
