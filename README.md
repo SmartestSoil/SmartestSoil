@@ -14,8 +14,7 @@ We have been working together throughout the whole project and everyone has been
 Our app is designed for plant enthusiasts to monitor soil moisture and pH levels in real-time. Receive alerts when your plants need attention and make informed decisions about their needs. Keep your plants healthy with ease using our intuitive platform.
 
 ## Description of the project
-- Authentication : Firebase Auth
-- General information page : Displays average figure of all sensors in different locations, and alerts notifications
+- Authentication : Firebase Authentication
 - Sensors list page : Displays all the sensors with a photo of the plant which is clickable to go to the specific detail page
 - Detail page : Displays the specific plant soil's status, figures of its moisture and pH level, daily, weekly and monthly
 
@@ -35,7 +34,7 @@ Our app is designed for plant enthusiasts to monitor soil moisture and pH levels
 - Sensor:
 
 - Data visualization:
-
+  **Vico - Chart library**
 
 
 
@@ -72,6 +71,8 @@ The application consists of different views and Signup/Login functionality. Thes
 **Step one:**
 
 Download the project / clone the project repository
+
+```git clone [insert project repository URL]```
 
 **Step two:**
 
