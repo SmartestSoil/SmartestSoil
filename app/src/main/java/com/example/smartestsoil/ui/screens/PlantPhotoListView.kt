@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
@@ -49,6 +50,8 @@ fun PlantListView(navController: NavController, viewModel: SensorViewModel){
         prefetchDistance = 5,
         enablePlaceholders = false
     )
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+
     // State to track whether the dialog form is open
     var showDialog by remember { mutableStateOf(false) }
     // Function to handle FAB click and open the dialog form where new plant can be added
@@ -92,8 +95,8 @@ fun PlantListView(navController: NavController, viewModel: SensorViewModel){
         floatingActionButtonPosition = FabPosition.End,
     ){
         LazyVerticalGrid(
-                columns = GridCells.Adaptive(minSize = 100.dp),
-                contentPadding = PaddingValues(24.dp),
+                columns = GridCells.Fixed(3),
+                contentPadding = PaddingValues(30.dp),
                 content = {
                     Log.d("MyApp", "itemCount: ${lazyPagingItems.itemCount}")
                     items(lazyPagingItems.itemCount) { index ->
@@ -124,13 +127,13 @@ fun PlantCard(plant: UserPlant, pairedSensor: String, onClick: (UserPlant) -> Un
     val user = FirebaseAuth.getInstance().currentUser
     if (plant.userId == user?.uid) {
         Card(
-            shape = RoundedCornerShape(1.dp),
+            shape = RoundedCornerShape(4.dp),
             border = BorderStroke(0.dp, color = Color.Transparent),
             modifier = Modifier
                 .height(180.dp)
                 .width(140.dp)
                 .clickable(onClick = {onClick(plant)} ),
-            elevation = 0.dp,
+            elevation = 8.dp,
             backgroundColor = Color.Transparent
         ) {
             Column( modifier = Modifier.fillMaxSize(),

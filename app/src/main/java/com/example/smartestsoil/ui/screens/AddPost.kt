@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.PhotoCamera
@@ -39,6 +40,8 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.example.smartestsoil.R
 import com.example.smartestsoil.model.BottomSheetItem
+import com.example.smartestsoil.model.UserPost
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -48,6 +51,7 @@ import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import java.util.*
+import java.util.Date
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
@@ -55,16 +59,13 @@ import java.util.*
 fun AddPost(onClose: () -> Unit) {
     val user = FirebaseAuth.getInstance().currentUser?.displayName ?: ""
     var postContent by remember { mutableStateOf("") }
-    var media by remember { mutableStateOf<String?>(null) }
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
     val coroutineScope = rememberCoroutineScope()
-   // val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(BottomSheetValue.Collapsed)
     val context = LocalContext.current
     val userId = Firebase.auth.currentUser?.uid
     val currentUser = FirebaseAuth.getInstance().currentUser
     val keyboardController = LocalSoftwareKeyboardController.current
 
-
-    // Firebase references
     val auth = Firebase.auth
     val storageRef = Firebase.storage.reference
     val firestoreDb = Firebase.firestore
@@ -72,20 +73,22 @@ fun AddPost(onClose: () -> Unit) {
     // Function to upload image to Firebase Storage and store plant data to Firestore
     fun addPost() {
         // Check if user is authenticated
+        val date: Date = Timestamp.now().toDate()
         val user = auth.currentUser
         if (user == null) {
             // User is not authenticated, show error message
-            Toast.makeText(context, "You must be logged in to add a plant", Toast.LENGTH_SHORT)
+            Toast.makeText(context, "You must be logged share post", Toast.LENGTH_SHORT)
                 .show()
             return
         }
 
         // Check if sensor name is empty
-        if (plantName.isEmpty()) {
+        if (postContent.isEmpty()) {
             // Sensor name is empty, show error message
-            Toast.makeText(context, "Please enter a plant name", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "create post by adding your thoughts", Toast.LENGTH_SHORT).show()
             return
         }
+
 
 
         // Create a unique filename for the image
@@ -93,291 +96,276 @@ fun AddPost(onClose: () -> Unit) {
 
         // Upload image to Firebase Storage
         val storageRef = storageRef.child("$filename")
-       media?.let { u ->
+        imageUri?.let { u ->
             storageRef.putFile(u)
                 .addOnSuccessListener { remoteUri ->
                     Log.d("*****", remoteUri.toString())
                     storageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
-                        // Store plant data to Firestore
                         val postData = hashMapOf(
                             "media" to downloadUrl.toString(),
                             "body" to postContent,
-                            "user" to currentUser,
-                            "date" to ,
-
-                            )
-
+                            "date" to date,
+                            "user" to userId
+                        )
                         firestoreDb.collection("posts")
-                            .document(filename)
+                            .document(date.toString())
                             .set(postData)
                             .addOnSuccessListener {
                                 // Plant data stored successfully, show success message
-                                Toast.makeText(context, "Plant added successfully", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    context,
+                                    "Post is shared successfully",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                                 onClose()
                             }
                             .addOnFailureListener { e ->
                                 // Plant data storage failed, show error message
-                                Toast.makeText(context, "Error adding sensor: ${e.message}", Toast.LENGTH_SHORT)
+                                Toast.makeText(
+                                    context,
+                                    "Error sharing: ${e.message}",
+                                    Toast.LENGTH_SHORT
+                                )
                                     .show()
                             }
+
                     }
                 }
-                .addOnFailureListener { e ->
-                    Log.e("ERROR*****", e.message.toString())
-                }
         }
     }
 
-    fun bitmapToByteArray(bitmap: Bitmap?): ByteArray {
-        val stream = ByteArrayOutputStream()
-        bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-        return stream.toByteArray()
-    }
 
-    val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
-        uri?.let {
-            media = it
+        fun bitmapToByteArray(bitmap: Bitmap?): ByteArray {
+            val stream = ByteArrayOutputStream()
+            bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+            return stream.toByteArray()
         }
-    }
 
-    val cameraLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.TakePicturePreview()) { bitmap ->
-        val byteArray = bitmapToByteArray(bitmap)
-        val path = "${UUID.randomUUID()}.jpg"
-        val imagesRef: StorageReference = storageRef.child("images/$userId/$path")
-        imagesRef.putBytes(byteArray)
-            .addOnSuccessListener {
-                imagesRef.downloadUrl.addOnSuccessListener { uri ->
-                    media= uri
+        val launcher =
+            rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+                uri?.let {
+                    imageUri = it
                 }
             }
-    }
 
-    fun takePhoto() {
-        cameraLauncher.launch(null)
-    }
-
-    fun removeCurrentPicture() {
-        media = null
-    }
-
-    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
-    )
-
-    fun chooseFromLibrary() {
-        launcher.launch("image/*")
-        coroutineScope.launch {
-            bottomSheetScaffoldState.bottomSheetState.collapse()
-        }
-    }
-
-    val bottomSheetItems = listOf(
-        BottomSheetItem(title = "Choose from library", icon = Icons.Outlined.PhotoLibrary, onClick = ::chooseFromLibrary, ),
-        BottomSheetItem(title = "Take photo", icon = Icons.Outlined.PhotoCamera, onClick = ::takePhoto),
-        BottomSheetItem(title = "Remove current picture", icon = Icons.Outlined.Delete, onClick = ::removeCurrentPicture)
-    )
-
-    Surface(
-        shape = RoundedCornerShape(1.dp),
-        color = Color.White
-    ) {
-        BottomSheetScaffold(
-            backgroundColor = Color.White,
-            scaffoldState = bottomSheetScaffoldState,
-            sheetShape = RoundedCornerShape(topEnd = 30.dp, topStart = 30.dp),
-            sheetContent = {
-                //UI for bottom sheet
-                Column(
-                    content = {
-                        Spacer(modifier = Modifier.padding(16.dp))
-                        Text(
-                            text = "Add an image of your Plant",
-                            modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Center,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 21.sp,
-                            color = MaterialTheme.colors.onPrimary
-                        )
-                        LazyVerticalGrid(
-                            columns = GridCells.Fixed(1),
-                        ){
-                            items(bottomSheetItems.size, itemContent = {
-                                Row(
-                                    horizontalArrangement = Arrangement.Start,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(top = 24.dp)
-                                        .clickable { bottomSheetItems[it].onClick() },
-                                ) {
-                                    Spacer(modifier = Modifier.padding(8.dp))
-                                    Icon(
-                                        bottomSheetItems[it].icon,
-                                        bottomSheetItems[it].title,
-                                        tint = MaterialTheme.colors.onPrimary
-                                    )
-                                    Spacer(modifier = Modifier.padding(8.dp))
-                                    Text(text = bottomSheetItems[it].title, color = MaterialTheme.colors.onPrimary)
-                                }
-                            })
+        val cameraLauncher =
+            rememberLauncherForActivityResult(contract = ActivityResultContracts.TakePicturePreview()) { bitmap ->
+                val byteArray = bitmapToByteArray(bitmap)
+                val path = "${UUID.randomUUID()}.jpg"
+                val imagesRef: StorageReference = storageRef.child("images/$userId/$path")
+                imagesRef.putBytes(byteArray)
+                    .addOnSuccessListener {
+                        imagesRef.downloadUrl.addOnSuccessListener { uri ->
+                            imageUri = uri
                         }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(350.dp)
-                        .background(brush = Brush.linearGradient(colors = listOf(MaterialTheme.colors.primary, MaterialTheme.colors.secondary)),)
-                        .padding(16.dp),
-
-                    )
-            },
-            sheetPeekHeight = 0.dp
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(start = 20.dp, end = 20.dp, bottom = 20.dp, top = 5.dp)
-                    .verticalScroll(state = rememberScrollState())
-                    .clickable(onClick = {
-                        keyboardController?.hide()
-                    }),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                IconButton(onClick = { onClose() }, modifier = Modifier.align(Alignment.End)) {
-                    Icon(
-                        imageVector = Icons.Default.Close,
-                        contentDescription = "Close",
-                        tint = MaterialTheme.colors.primary
-                    )
-                }
-                Text(
-                    text = "Add Plant",
-                    color = MaterialTheme.colors.primaryVariant,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 20.sp,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(20.dp))
-
-                Box(
-                    modifier = Modifier.size(124.dp)
-                        .clip(RoundedCornerShape(70.dp))
-                        .background(MaterialTheme.colors.primary),
-                    contentAlignment = Alignment.BottomEnd
-                ) {
-                    if (media != null) {
-                        Image(
-                            painter = rememberImagePainter(data = media),
-                            contentDescription = "Selected Image",
-                            modifier = Modifier.size(120.dp)
-                                .clip(RoundedCornerShape(70.dp)),
-                            contentScale = ContentScale.Crop
-                        )
-                    } else {
-                        Image(
-                            painter = painterResource(id = R.drawable.logo_without_text_300),
-                            contentDescription = "Placeholder Image",
-                            modifier = Modifier.size(120.dp)
-                                .clip(RoundedCornerShape(70.dp)),
-                            contentScale = ContentScale.Crop
-                        )
                     }
+            }
 
-                    Box(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colors.secondary)
-                            .clickable(
-                                onClick = {
-                                    coroutineScope.launch {
-                                        if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
-                                            bottomSheetScaffoldState.bottomSheetState.expand()
-                                        } else {
-                                            bottomSheetScaffoldState.bottomSheetState.collapse()
-                                        }
-                                    }
-                                })
-                            .padding(12.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = "Image",
-                            tint = MaterialTheme.colors.onPrimary
-                        )
-                    }
-                }
-                Spacer(modifier = Modifier.height(25.dp))
+        fun takePhoto() {
+            cameraLauncher.launch(null)
+        }
 
-                Text(
-                    text = "Give a name for your sensor:",
-                    color = MaterialTheme.colors.primary,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
-                    modifier = Modifier.align(Alignment.Start)
-                )
-                Spacer(modifier = Modifier.height(5.dp))
-                OutlinedTextField(
-                    value = plantName,
-                    onValueChange = { plantName = it },
-                    label = {
-                        Text(
-                            text = "Plant name",
-                            color = MaterialTheme.colors.primaryVariant
-                        )
-                    },
-                    placeholder = { Text(text = "Enter a name for your plant") },
-                    singleLine = true,
-                    shape = RoundedCornerShape(1.dp),
-                    textStyle =
-                    TextStyle(
-                        color = MaterialTheme.colors.primary
-                    )
-                )
-                Spacer(modifier = Modifier.height(20.dp))
+        fun removeCurrentPicture() {
+            imageUri = null
+        }
 
-                Text(
-                    text = "Add a sensor to your plant:",
-                    color = MaterialTheme.colors.primary,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
-                    modifier = Modifier.align(Alignment.Start)
-                )
-                Spacer(modifier = Modifier.height(5.dp))
-                OutlinedTextField(
-                    value = pairedSensor,
-                    onValueChange = { pairedSensor = it },
-                    label = {
-                        Text(
-                            text = "Paired sensor",
-                            color = MaterialTheme.colors.primaryVariant
-                        )
-                    },
-                    placeholder = { Text(text = "Add the sensor name") },
-                    singleLine = true,
-                    shape = RoundedCornerShape(1.dp),
-                    textStyle =
-                    TextStyle(
-                        color = MaterialTheme.colors.primary
-                    )
-                )
-                Spacer(modifier = Modifier.height(20.dp))
-                Button(
-                    onClick = {
-                        addPlant()
-                        onClose()
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        disabledBackgroundColor = MaterialTheme.colors.primary,
-                        backgroundColor = MaterialTheme.colors.primary
-                    )
-                ) {
-                    Text(
-                        modifier = Modifier.padding(5.dp),
-                        text = "Save",
-                        color = MaterialTheme.colors.onPrimary
-                    )
-                }
+        val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
+            bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
+        )
+
+        fun chooseFromLibrary() {
+            launcher.launch("image/*")
+            coroutineScope.launch {
+                bottomSheetScaffoldState.bottomSheetState.collapse()
             }
         }
+
+        val bottomSheetItems = listOf(
+            BottomSheetItem(
+                title = "Choose from library",
+                icon = Icons.Outlined.PhotoLibrary,
+                onClick = ::chooseFromLibrary,
+            ),
+            BottomSheetItem(
+                title = "Take photo",
+                icon = Icons.Outlined.PhotoCamera,
+                onClick = ::takePhoto
+            ),
+            BottomSheetItem(
+                title = "Remove current picture",
+                icon = Icons.Outlined.Delete,
+                onClick = ::removeCurrentPicture
+            )
+        )
+        Surface(
+            shape = RoundedCornerShape(8.dp),
+            color = Color.White,
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+                BottomSheetScaffold(
+                    backgroundColor = Color.White,
+                    scaffoldState = bottomSheetScaffoldState,
+                    sheetShape = RoundedCornerShape(topEnd = 10.dp, topStart = 10.dp),
+                    sheetContent = {
+                        //UI for bottom sheet
+                        Column(
+                            content = {
+                                Spacer(modifier = Modifier.padding(16.dp))
+                                Text(
+                                    text = "Choose media file",
+                                    modifier = Modifier.fillMaxWidth(),
+                                    textAlign = TextAlign.Center,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 21.sp,
+                                    color = MaterialTheme.colors.onPrimary
+                                )
+                                LazyVerticalGrid(
+                                    columns = GridCells.Fixed(1),
+                                ) {
+                                    items(bottomSheetItems.size, itemContent = {
+                                        Row(
+                                            horizontalArrangement = Arrangement.Start,
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(top = 24.dp)
+                                                .clickable { bottomSheetItems[it].onClick() },
+                                        ) {
+                                            Spacer(modifier = Modifier.padding(8.dp))
+                                            Icon(
+                                                bottomSheetItems[it].icon,
+                                                bottomSheetItems[it].title,
+                                                tint = MaterialTheme.colors.onPrimary
+                                            )
+                                            Spacer(modifier = Modifier.padding(8.dp))
+                                            Text(
+                                                text = bottomSheetItems[it].title,
+                                                color = MaterialTheme.colors.onPrimary
+                                            )
+                                        }
+                                    })
+                                }
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(350.dp)
+                                .background(
+                                    brush = Brush.linearGradient(
+                                        colors = listOf(
+                                            MaterialTheme.colors.primary,
+                                            MaterialTheme.colors.secondary
+                                        )
+                                    ),
+                                )
+                                .padding(16.dp),
+
+                            )
+                    },
+                    sheetPeekHeight = 0.dp
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(start = 20.dp, end = 20.dp, bottom = 20.dp, top = 5.dp)
+                            .verticalScroll(state = rememberScrollState())
+                            .clickable(onClick = {
+                                keyboardController?.hide()
+                            }),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        IconButton(
+                            onClick = { onClose() },
+                            modifier = Modifier.align(Alignment.End)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "Close",
+                                tint = MaterialTheme.colors.primary
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(20.dp))
+
+                        Spacer(modifier = Modifier.height(5.dp))
+                        OutlinedTextField(
+                            value = postContent,
+                            onValueChange = { postContent = it },
+                            label = {
+                                Text(
+                                    text = "Share your thoughts",
+                                    color = MaterialTheme.colors.primaryVariant
+                                )
+                            },
+                            placeholder = { Text(text = "Share your thoughts") },
+                            singleLine = false,
+                            shape = RoundedCornerShape(1.dp),
+                            textStyle =
+                            TextStyle(
+                                color = MaterialTheme.colors.primary
+                            ),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp)
+                        )
+                        Spacer(modifier = Modifier.height(20.dp))
+                        Button(
+                            onClick = {
+                                coroutineScope.launch {
+                                    if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
+                                        bottomSheetScaffoldState.bottomSheetState.expand()
+                                    } else {
+                                        bottomSheetScaffoldState.bottomSheetState.collapse()
+                                    }
+                                }
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = MaterialTheme.colors.primary
+                            )
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .clip(CircleShape)
+                                    .background(MaterialTheme.colors.secondary)
+                                    .padding(12.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.AddAPhoto,
+                                    contentDescription = "Image",
+                                    tint = MaterialTheme.colors.onPrimary
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.width(8.dp))
+
+                            Text(
+                                text = "Add Image",
+                                color = MaterialTheme.colors.onPrimary
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(20.dp))
+
+                        Button(
+                            onClick = {
+                                addPost()
+                                onClose()
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                disabledBackgroundColor = MaterialTheme.colors.primary,
+                                backgroundColor = MaterialTheme.colors.primary
+                            )
+                        ) {
+                            Text(
+                                modifier = Modifier.padding(5.dp),
+                                text = "Share",
+                                color = MaterialTheme.colors.onPrimary
+                            )
+                        }
+                    }
+
+
+                }
+            }
     }
-}
+

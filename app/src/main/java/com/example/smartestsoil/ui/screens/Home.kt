@@ -22,8 +22,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -76,7 +75,7 @@ fun FeedScreen(navController: NavController) {
         Dialog(
             onDismissRequest = { showDialog = false },
             content = {
-                AddPlant(onClose = { showDialog = false })
+                AddPost(onClose = { showDialog = false })
             }
         )
     }
@@ -90,6 +89,19 @@ fun FeedScreen(navController: NavController) {
             val pager = Pager(config = pagingConfig, pagingSourceFactory = { source })
             pager.flow.cachedIn(lifecycle.coroutineScope)
         }.collectAsLazyPagingItems()
+        FloatingActionButton(
+            shape = CircleShape,
+            onClick = { onFABClick() },
+            modifier = Modifier
+                .padding(16.dp)
+                .align(Alignment.End)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Create,
+                contentDescription = "Add FAB",
+                tint = MaterialTheme.colors.onPrimary
+            )
+        }
 
         LazyColumn(contentPadding = PaddingValues(8.dp)) {
             items(lazyPagingItems) { post ->
@@ -101,19 +113,6 @@ fun FeedScreen(navController: NavController) {
             }
         }
 
-        FloatingActionButton(
-            shape = CircleShape,
-            onClick = { onFABClick() },
-            modifier = Modifier
-                .padding(16.dp)
-                .align(Alignment.End)
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Add,
-                contentDescription = "Add FAB",
-                tint = MaterialTheme.colors.onPrimary
-            )
-        }
     }
 }
 
