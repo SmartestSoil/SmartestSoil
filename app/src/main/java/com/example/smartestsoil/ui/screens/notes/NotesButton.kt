@@ -21,27 +21,23 @@ fun NotesButton(plant: UserPlant) {
     var showNoteDialog = remember { mutableStateOf(false) }
 
     Card(
-        shape = RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(8.dp),
         backgroundColor = MaterialTheme.colors.primary,
         modifier = Modifier
-            .padding(4.dp)
-            .fillMaxWidth()
+            .padding(10.dp)
+            .width(180.dp)
             .clickable(onClick = { showNoteDialog.value = true })
-            .height(40.dp),
+            .height(60.dp),
         elevation = 8.dp,
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(start = 8.dp, end = 8.dp)
         ) {
-            Icon(
-                imageVector = Icons.Outlined.EditNote,
-                contentDescription = "Notes Icon",
-                tint = MaterialTheme.colors.onPrimary
-            )
+
             Spacer(modifier = Modifier.width(4.dp))
             Text(
-                text = "Notes",
+                text = "add plant record",
                 color = MaterialTheme.colors.onPrimary,
                 fontSize = 16.sp
             )

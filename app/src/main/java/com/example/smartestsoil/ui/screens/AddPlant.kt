@@ -94,7 +94,6 @@ fun AddPlant(onClose: () -> Unit) {
 
         // Create a unique filename for the image
         val filename = "${UUID.randomUUID()}.jpg"
-
         // Upload image to Firebase Storage
         val storageRef = storageRef.child("$filename")
         imageUri?.let { u ->
@@ -108,6 +107,7 @@ fun AddPlant(onClose: () -> Unit) {
                             "pairedSensor" to pairedSensor,
                             "plantId" to plantId,
                             "plantName" to plantName,
+                            "userId" to userId
 
                         )
 

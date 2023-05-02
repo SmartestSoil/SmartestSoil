@@ -73,7 +73,9 @@ fun PlantListView(navController: NavController, viewModel: SensorViewModel){
 
     val lazyPagingItems = remember {
         val db = Firebase.firestore
-        val source = PlantsFireStorePagingSource(db)
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        val currentUserUid =  currentUser?.uid.toString()
+        val source = PlantsFireStorePagingSource(db, currentUserUid )
         val pager = Pager(config = pagingConfig, pagingSourceFactory = { source })
         pager.flow.cachedIn(lifecycle.coroutineScope)
     }.collectAsLazyPagingItems()
@@ -124,8 +126,7 @@ fun PlantListView(navController: NavController, viewModel: SensorViewModel){
 
 @Composable
 fun PlantCard(plant: UserPlant, pairedSensor: String, onClick: (UserPlant) -> Unit) {
-    val user = FirebaseAuth.getInstance().currentUser
-    if (plant.userId == user?.uid) {
+
         Card(
             shape = RoundedCornerShape(4.dp),
             border = BorderStroke(0.dp, color = Color.Transparent),
@@ -161,5 +162,4 @@ fun PlantCard(plant: UserPlant, pairedSensor: String, onClick: (UserPlant) -> Un
                 NotesButton(plant = plant)
             }
         }
-    }
 }
