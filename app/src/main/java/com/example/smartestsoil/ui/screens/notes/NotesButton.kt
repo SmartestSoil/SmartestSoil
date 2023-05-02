@@ -37,7 +37,7 @@ fun NotesButton(plant: UserPlant) {
 
             Spacer(modifier = Modifier.width(4.dp))
             Text(
-                text = "add plant record",
+                text = "add note",
                 color = MaterialTheme.colors.onPrimary,
                 fontSize = 16.sp
             )

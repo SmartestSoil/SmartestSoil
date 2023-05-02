@@ -7,7 +7,7 @@ import androidx.paging.PagingState
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.tasks.await
-import com.google.firebase.Timestamp
+import com.google.firebase.firestore.Query
 import java.util.Date
 
 data class UserPost(
@@ -35,7 +35,7 @@ class PostsFireStorePagingSource(
         return try {
 
             val currentPage = params.key ?: db.collection("posts")
-                .orderBy("date")
+                .orderBy("date", Query.Direction.DESCENDING)
                 .limit(params.loadSize.toLong())
                 .get()
                 .await()
@@ -43,7 +43,7 @@ class PostsFireStorePagingSource(
             val lastDocumentSnapshot = currentPage.documents.lastOrNull()
             val nextPage = if (lastDocumentSnapshot != null) {
                 db.collection("posts")
-                    .orderBy("date")
+                    .orderBy("date", Query.Direction.DESCENDING)
                     .startAfter(lastDocumentSnapshot)
                     .limit(params.loadSize.toLong())
                     .get()

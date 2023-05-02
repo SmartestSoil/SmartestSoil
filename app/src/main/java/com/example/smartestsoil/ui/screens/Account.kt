@@ -51,12 +51,7 @@ fun Account(navController: NavController, userEmail: String) {
             style = MaterialTheme.typography.h4,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-
-        Text(
-            text = "You have $numOfPlants plants.",
-            style = MaterialTheme.typography.body1,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
+        
 
         // Add more content to the screen as needed
     }

@@ -134,7 +134,7 @@ fun PlantCard(plant: UserPlant, pairedSensor: String, onClick: (UserPlant) -> Un
                 .height(180.dp)
                 .width(140.dp)
                 .clickable(onClick = {onClick(plant)} ),
-            elevation = 8.dp,
+            elevation = 0.dp,
             backgroundColor = Color.Transparent
         ) {
             Column( modifier = Modifier.fillMaxSize(),

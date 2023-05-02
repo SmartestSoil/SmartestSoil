@@ -52,6 +52,23 @@
         "description": "The Fiddle Leaf Fig (Ficus lyrata) is a popular houseplant known for its large, glossy leaves that resemble the shape of a fiddle. It requires a bit more care compared to other houseplants, but with proper attention, it can thrive indoors. To care for a Fiddle Leaf Fig, place it in bright indirect light, water when the top inch of soil is dry, and apply a balanced, water-soluble fertilizer every 2-3 months during the growing season."
     },
     {
+        "plantName": "Rose",
+        "care": {
+            "light": "Full sun, at least 6 hours of direct sunlight",
+            "water": "Water deeply and consistently, allowing the soil to dry slightly between waterings",
+            "fertilizer": "Every 4-6 weeks during the growing season, using a balanced, slow-release fertilizer"
+        },
+        "suitableMoisture": {
+            "min": 40,
+            "max": 60
+        },
+        "suitableTemperature": {
+            "min": 15,
+            "max": 30
+        },
+        "description": "Roses (Rosa spp.) are popular flowering plants known for their beauty and fragrance. To grow roses, plant them in a location that receives at least 6 hours of direct sunlight, water deeply and consistently while allowing the soil to dry slightly between waterings, and apply a balanced, slow-release fertilizer every 4-6 weeks during the growing season. Roses require proper pruning to maintain their shape and promote blooming, so be sure to remove dead or diseased wood, and thin out crowded branches. There are many varieties of roses available, so choose one that suits your climate and growing conditions."
+    },    
+    {
     "plantName": "Rubber Plant",
     "care": {
         "light": "Bright indirect light",
@@ -192,6 +209,23 @@
         },
         "description": "Scallions (Allium fistulosum), also known as green onions, are a versatile edible houseplant that can be grown indoors. To grow scallions, place them in a spot that receives at least 4-6 hours of direct sunlight, keep the soil consistently moist without overwatering, and apply a balanced, water-soluble fertilizer every 4-6 weeks during the growing season. Harvest the green tops as needed, leaving at least 1-2 inches above the soil for regrowth."
     },
+    {
+        "plantName": "Mint",
+        "care": {
+            "light": "Full sun to partial shade, at least 4-6 hours of direct sunlight",
+            "water": "Keep the soil consistently moist, but not soggy",
+            "fertilizer": "Every 4-6 weeks, during the growing season"
+        },
+        "suitableMoisture": {
+            "min": 40,
+            "max": 70
+        },
+        "suitableTemperature": {
+            "min": 15,
+            "max": 24
+        },
+        "description": "Mint (Mentha spp.) is a versatile and aromatic herb that can be grown indoors or outdoors. To grow mint, place it in a spot that receives at least 4-6 hours of direct sunlight, keep the soil consistently moist without overwatering, and apply a balanced, water-soluble fertilizer every 4-6 weeks during the growing season. Mint can be invasive, so it's best to grow it in a container to prevent it from taking over your garden. Harvest the leaves as needed for culinary uses, teas, or refreshing beverages."
+    },    
     {
         "plantName": "Swiss Chard",
         "care": {

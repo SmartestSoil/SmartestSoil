@@ -40,6 +40,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.zIndex
 import com.example.smartestsoil.model.BottomSheetItem
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
@@ -94,16 +95,18 @@ fun AddPlant(onClose: () -> Unit) {
 
         // Create a unique filename for the image
         val filename = "${UUID.randomUUID()}.jpg"
+
         // Upload image to Firebase Storage
-        val storageRef = storageRef.child("$filename")
-        imageUri?.let { u ->
-            storageRef.putFile(u)
-                .addOnSuccessListener { remoteUri ->
-                    Log.d("*****", remoteUri.toString())
-                    storageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
+        //val storageRef = storageRef.child("$filename")
+        //imageUri?.let { u ->
+          //  storageRef.putFile(u)
+           //     .addOnSuccessListener { remoteUri ->
+             //       Log.d("*****", remoteUri.toString())
+             //       storageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
                         // Store plant data to Firestore
+                if(imageUri != null){
                         val plantData = hashMapOf(
-                            "imageUrl" to downloadUrl.toString(),
+                            "imageUrl" to imageUri.toString(),
                             "pairedSensor" to pairedSensor,
                             "plantId" to plantId,
                             "plantName" to plantName,
@@ -125,11 +128,11 @@ fun AddPlant(onClose: () -> Unit) {
                                     .show()
                             }
                     }
-                }
-                .addOnFailureListener { e ->
-                    Log.e("ERROR*****", e.message.toString())
-                }
-        }
+             //   }
+            //    .addOnFailureListener { e ->
+            //        Log.e("ERROR*****", e.message.toString())
+            //    }
+    //    }
     }
 
     fun bitmapToByteArray(bitmap: Bitmap?): ByteArray {
@@ -228,8 +231,16 @@ fun AddPlant(onClose: () -> Unit) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(350.dp)
-                        .background(brush = Brush.linearGradient(colors = listOf(MaterialTheme.colors.primary, MaterialTheme.colors.secondary)),)
+                        .background(
+                            brush = Brush.linearGradient(
+                                colors = listOf(
+                                    MaterialTheme.colors.primary,
+                                    MaterialTheme.colors.secondary
+                                )
+                            ),
+                        )
                         .padding(16.dp),
+
 
                     )
             },
@@ -249,7 +260,10 @@ fun AddPlant(onClose: () -> Unit) {
                     Icon(
                         imageVector = Icons.Default.Close,
                         contentDescription = "Close",
-                        tint = MaterialTheme.colors.primary
+                        tint = MaterialTheme.colors.primary,
+                        modifier= Modifier
+                            .padding(12.dp)
+                            .zIndex(1f),
                     )
                 }
                 Text(
@@ -262,16 +276,19 @@ fun AddPlant(onClose: () -> Unit) {
                 Spacer(modifier = Modifier.height(20.dp))
 
                 Box(
-                    modifier = Modifier.size(124.dp)
+                    modifier = Modifier
+                        .size(124.dp)
                         .clip(RoundedCornerShape(70.dp))
-                        .background(MaterialTheme.colors.primary),
+                        .background(MaterialTheme.colors.primary)
+                        .zIndex(0f),
                     contentAlignment = Alignment.BottomEnd
                 ) {
                     if (imageUri != null) {
                         Image(
                             painter = rememberImagePainter(data = imageUri),
                             contentDescription = "Selected Image",
-                            modifier = Modifier.size(120.dp)
+                            modifier = Modifier
+                                .size(120.dp)
                                 .clip(RoundedCornerShape(70.dp)),
                             contentScale = ContentScale.Crop
                         )
@@ -279,12 +296,17 @@ fun AddPlant(onClose: () -> Unit) {
                         Image(
                             painter = painterResource(id = R.drawable.logo_without_text_300),
                             contentDescription = "Placeholder Image",
-                            modifier = Modifier.size(120.dp)
+                            modifier = Modifier
+                                .size(120.dp)
                                 .clip(RoundedCornerShape(70.dp)),
                             contentScale = ContentScale.Crop
                         )
                     }
-
+                }
+                Box(modifier = Modifier
+                    .offset(y = (-35).dp, x = (40).dp)
+                    .zIndex(1f),
+                    contentAlignment = Alignment.Center) {
                     Box(
                         modifier = Modifier
                             .size(40.dp)
@@ -299,21 +321,22 @@ fun AddPlant(onClose: () -> Unit) {
                                             bottomSheetScaffoldState.bottomSheetState.collapse()
                                         }
                                     }
-                                })
-                            .padding(12.dp),
-                        contentAlignment = Alignment.Center
+                                }),
+                        contentAlignment = Alignment.Center,
+
                     ) {
                         Icon(
                             imageVector = Icons.Default.Add,
                             contentDescription = "Image",
-                            tint = MaterialTheme.colors.onPrimary
+                            tint = MaterialTheme.colors.onPrimary,
                         )
                     }
                 }
+
                 Spacer(modifier = Modifier.height(25.dp))
 
                 Text(
-                    text = "Give a name for your sensor:",
+                    text = "Give a name to your plant:",
                     color = MaterialTheme.colors.primary,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,

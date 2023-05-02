@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 
 
-const val BASE_URL = ""
+const val BASE_URL = "http://smartestsoil.duckdns.org:3000"
 interface SensorApi {
     @GET("/api/data")
     suspend fun getSensorData(): List<SensorData>
