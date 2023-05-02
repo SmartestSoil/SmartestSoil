@@ -240,51 +240,8 @@ fun SensorList(sensordata: List<SensorData>, viewModel: PlantListViewModel) {
                 PlantListScreen(currentPlantName)
             }
 
-
-
-
-
-            /* LazyColumn(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
-        items(itemsList) { item ->
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth(0.8f)
-                    .padding(vertical = 10.dp)
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null,
-                        onClick = { /* Handle item click here */ }
-                    ),
-                shape = RoundedCornerShape(4.dp),
-                elevation = 4.dp,
-                color = MaterialTheme.colors.surface
-            ) {
-                Row(modifier = Modifier.padding(20.dp)) {
-                    Text(
-                        item,
-                        modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
-                        color = Color.White,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
-        }
-    }*/
-
-
     }
 
 }
-/*@Composable
-fun PlantList(viewModel: PlantListViewModel = viewModel()) {
-    val plantList = viewModel.getPlantList(LocalContext.current)
 
-    LazyColumn {
-        items(plantList) { plant ->
-            Text(text = plant.plantName)
-            // Add more UI elements to display other plant details
-        }
-    }
-}*/
 
