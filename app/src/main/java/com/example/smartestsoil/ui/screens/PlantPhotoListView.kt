@@ -64,7 +64,7 @@ fun PlantListView(navController: NavController, viewModel: SensorViewModel){
         Dialog(
             onDismissRequest = { showDialog = false },
             content = {
-                AddPost(onClose = { showDialog = false })
+                AddPlant(onClose = { showDialog = false })
             }
         )
     }
